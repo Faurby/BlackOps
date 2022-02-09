@@ -28,6 +28,19 @@ public class UsersController : ControllerBase
         return user;
     }
 
+    [HttpGet("username/{username}")]
+    public async Task<ActionResult<User>> GetUsername(string username)
+    {
+        var user = await _usersService.GetUsernameAsync(username);
+
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        return user;
+    }
+
     [HttpPost]
     public async Task<IActionResult> Post(User newUser)
     {
