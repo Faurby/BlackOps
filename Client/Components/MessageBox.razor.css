@@ -1,0 +1,24 @@
+.messagebox {
+    margin: auto;
+    width: 50%;
+    border: 2px solid;
+    border-radius: 1em;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+.timestamp {
+    font-size: small;
+    color: grey;
+    margin-bottom: 0;
+}
+
+.byline {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0;
+    gap: 1em;
+}
+
+.text {}

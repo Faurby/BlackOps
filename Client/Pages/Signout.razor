@@ -1,0 +1,14 @@
+@page "/signout"
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStore
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await localStore.RemoveItemAsync("user");
+        var uri = $"{NavigationManager.BaseUri}";
+
+        NavigationManager.NavigateTo(uri, true);
+    }
+}

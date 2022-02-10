@@ -1,0 +1,15 @@
+<div class="messagebox">
+    <div class="byline">
+        <h2>@message.AuthorName</h2>
+        <p class="timestamp">@message.Timestamp</p>
+    </div>
+
+    <p class="text">@message.Text</p>
+</div>
+
+@code
+{
+    [Parameter]
+    public Message? message { get; set; }
+
+}

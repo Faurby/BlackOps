@@ -45,6 +45,7 @@ public class MessagesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(Message newMessage)
     {
+        newMessage.Timestamp.ToLocalTime();
         await _messagesService.CreateAsync(newMessage);
 
         return CreatedAtAction(nameof(Get), new { id = newMessage.Id }, newMessage);
