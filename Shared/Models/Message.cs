@@ -12,6 +12,8 @@ public class Message
     [BsonRepresentation(BsonType.ObjectId)]
     public string AuthorID { get; set; } = null!;
 
+    public string AuthorName { get; set; } = null!;
+
     public DateTime Timestamp { get; set; }
 
     [MaxLength(280)]

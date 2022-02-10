@@ -1,3 +1,4 @@
+using BCrypt.Net;
 using Microsoft.Extensions.Options;
 using MiniTwit.Shared;
 using MongoDB.Driver;
@@ -8,8 +9,7 @@ public class UsersService
 {
     private readonly IMongoCollection<User> _usersCollection;
 
-    public UsersService(
-        IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings)
+    public UsersService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings)
     {
         var mongoClient = new MongoClient(
             miniTwitDatabaseSettings.Value.ConnectionString);

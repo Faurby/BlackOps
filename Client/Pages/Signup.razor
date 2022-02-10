@@ -19,7 +19,7 @@
         </div> *@
     <div class="form-group">
         <label for="Password">Password</label>
-        <InputText id="Password" @bind-Value="user.Password" class="form-control" />
+        <InputText id="Password" type="password" @bind-Value="user.Password" class="form-control" />
     </div>
     <div class="form-group">
         <br />
@@ -34,12 +34,11 @@
 
     private async Task HandleValidSubmit()
     {
+        //user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
         await localStore.SetItemAsync("user", user);
         
-        Console.WriteLine((await localStore.GetItemAsync<User>("user")).UserName);
-
         var response = await Http.PostAsJsonAsync("api/Users", user);
-
         if (response.IsSuccessStatusCode)
         {
             var uri = $"{NavigationManager.BaseUri}";

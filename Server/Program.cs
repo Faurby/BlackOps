@@ -1,12 +1,13 @@
 using Microsoft.OpenApi.Models;
 using MiniTwit.Server;
 using Blazored.LocalStorage;
+using MyApp.Server;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.Configure<MiniTwitDatabaseSettings>(
-    builder.Configuration.GetSection("MiniTwitDatabase"));
+builder.Services.Configure<MiniTwitDatabaseSettings>(builder.Configuration.GetSection("MiniTwitDatabase"));
 
 builder.Services.AddSingleton<MessagesService>();
 builder.Services.AddSingleton<UsersService>();
@@ -49,5 +50,7 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
+//app.Seed();
 
 app.Run();
