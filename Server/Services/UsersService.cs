@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using MiniTwit.Shared;
 using MongoDB.Driver;
 
 namespace MiniTwit.Server;
@@ -28,6 +29,8 @@ public class UsersService
 
     public async Task<User?> GetUsernameAsync(string username) =>
         await _usersCollection.Find(x => x.UserName == username).FirstOrDefaultAsync();
+    public async Task<User?> Signin(string username, string password) =>
+        await _usersCollection.Find(x => x.UserName == username && x.Password == password).FirstOrDefaultAsync();
 
     public async Task CreateAsync(User newUser) =>
         await _usersCollection.InsertOneAsync(newUser);

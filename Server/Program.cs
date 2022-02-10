@@ -1,5 +1,6 @@
 using Microsoft.OpenApi.Models;
 using MiniTwit.Server;
+using Blazored.LocalStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,7 @@ builder.Services.Configure<MiniTwitDatabaseSettings>(
 builder.Services.AddSingleton<MessagesService>();
 builder.Services.AddSingleton<UsersService>();
 
-
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 

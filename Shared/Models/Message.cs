@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MiniTwit.Server;
+namespace MiniTwit.Shared;
 public class Message
 {
     [BsonId]

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MiniTwit.Shared;
 
 namespace MiniTwit.Server;
 
@@ -81,7 +82,19 @@ public class UsersController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("/follow/{whoID:length(24)}&{whomID:length(24)}")]
+    [HttpGet("signin/{username}&{password}")]
+    public async Task<ActionResult<User>> Signin(string username, string password)
+    {
+        var user = await _usersService.Signin(username, password);
+
+        if (user is null)
+        {
+            return NotFound();
+        }
+            return Ok(user);
+    }
+
+    [HttpPost("follow/{whoID:length(24)}&{whomID:length(24)}")]
     public async Task<IActionResult> Follow(string whoID, string whomID)
     {
         var status = await _usersService.Follow(whoID, whomID);
@@ -97,7 +110,7 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpPost("/unfollow/{whoID:length(24)}&{whomID:length(24)}")]
+    [HttpPost("unfollow/{whoID:length(24)}&{whomID:length(24)}")]
     public async Task<IActionResult> Unfollow(string whoID, string whomID)
     {
         var status = await _usersService.Unfollow(whoID, whomID);

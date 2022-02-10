@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MiniTwit.Shared;
 
 namespace MiniTwit.Server;
 

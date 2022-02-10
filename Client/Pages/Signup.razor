@@ -1,0 +1,57 @@
+@page "/signup"
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStore
+@using MiniTwit.Shared
+
+<h1>Create user</h1>
+
+<EditForm Model="@user" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="Username">Username</label>
+        <InputText id="Username" @bind-Value="user.UserName" class="form-control" />
+    </div>
+    @* <div class="form-group">
+        <label for="Email">E-mail</label>
+        <InputText id="Email" @bind-Value="user.Email" class="form-control" />
+        </div> *@
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <InputText id="Password" @bind-Value="user.Password" class="form-control" />
+    </div>
+    <div class="form-group">
+        <br />
+        <button type="submit" class="btn btn-success">Create</button>
+        <button type="reset" class="btn btn-secondary">Reset</button>
+        @* <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button> *@
+    </div>
+</EditForm>
+
+@code {
+    private User user = new();
+
+    private async Task HandleValidSubmit()
+    {
+        await localStore.SetItemAsync("user", user);
+        
+        Console.WriteLine((await localStore.GetItemAsync<User>("user")).UserName);
+
+        var response = await Http.PostAsJsonAsync("api/Users", user);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var uri = $"{NavigationManager.BaseUri}";
+
+            NavigationManager.NavigateTo(uri);
+        }
+    }
+
+    @* private void Cancel()
+        {
+        var uri = $"{NavigationManager.BaseUri}characters";
+
+        NavigationManager.NavigateTo(uri);
+        } *@
+}

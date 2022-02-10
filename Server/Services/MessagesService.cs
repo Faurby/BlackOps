@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using MiniTwit.Shared;
 using MongoDB.Driver;
 
 namespace MiniTwit.Server;
