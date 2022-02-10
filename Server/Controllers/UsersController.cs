@@ -80,4 +80,36 @@ public class UsersController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPost("/follow/{whoID:length(24)}&{whomID:length(24)}")]
+    public async Task<IActionResult> Follow(string whoID, string whomID)
+    {
+        var status = await _usersService.Follow(whoID, whomID);
+
+        switch (status)
+        {
+            case Status.Success:
+                return Ok();
+            case Status.NotFound:
+                return NotFound();
+            default:
+                return Conflict();
+        }
+    }
+
+    [HttpPost("/unfollow/{whoID:length(24)}&{whomID:length(24)}")]
+    public async Task<IActionResult> Unfollow(string whoID, string whomID)
+    {
+        var status = await _usersService.Unfollow(whoID, whomID);
+
+        switch (status)
+        {
+            case Status.Success:
+                return Ok();
+            case Status.NotFound:
+                return NotFound();
+            default:
+                return Conflict();
+        }
+    }
 }

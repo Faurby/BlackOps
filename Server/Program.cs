@@ -7,7 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MiniTwitDatabaseSettings>(
     builder.Configuration.GetSection("MiniTwitDatabase"));
 
+builder.Services.AddSingleton<MessagesService>();
 builder.Services.AddSingleton<UsersService>();
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

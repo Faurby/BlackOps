@@ -37,4 +37,39 @@ public class UsersService
 
     public async Task RemoveAsync(string id) =>
         await _usersCollection.DeleteOneAsync(x => x.Id == id);
+
+    public async Task<Status> Follow(string whoID, string whomID)
+    {
+        var user = (await _usersCollection.Find(x => x.Id == whoID).FirstOrDefaultAsync());
+
+
+        if (user != null)
+        {
+            user.Follows!.Add(whomID);
+            await UpdateAsync(user.Id!, user);
+
+            return Status.Success;
+        }
+        else
+        {
+            return Status.NotFound;
+        }
+    }
+
+    public async Task<Status> Unfollow(string whoID, string whomID)
+    {
+        var user = (await _usersCollection.Find(x => x.Id == whoID).FirstOrDefaultAsync());
+
+
+        if (user != null)
+        {
+            user.Follows?.Remove(whomID);
+            await UpdateAsync(user.Id!, user);
+            return Status.Success;
+        }
+        else
+        {
+            return Status.NotFound;
+        }
+    }
 }
