@@ -94,10 +94,10 @@ public class UsersController : ControllerBase
             return Ok(user);
     }
 
-    [HttpPost("follow/{whoID:length(24)}&{whomID:length(24)}")]
-    public async Task<IActionResult> Follow(string whoID, string whomID)
+    [HttpPost("follow")]
+    public async Task<IActionResult> Follow(FollowDTO followDTO)
     {
-        var status = await _usersService.Follow(whoID, whomID);
+        var status = await _usersService.Follow(followDTO.WhoID, followDTO.WhomID);
 
         switch (status)
         {
@@ -110,10 +110,10 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpPost("unfollow/{whoID:length(24)}&{whomID:length(24)}")]
-    public async Task<IActionResult> Unfollow(string whoID, string whomID)
+    [HttpPost("unfollow")]
+    public async Task<IActionResult> Unfollow(FollowDTO followDTO)
     {
-        var status = await _usersService.Unfollow(whoID, whomID);
+        var status = await _usersService.Unfollow(followDTO.WhoID, followDTO.WhomID);
 
         switch (status)
         {

@@ -1,0 +1,99 @@
+@page "/user/{id}"
+@using MiniTwit.Client.Components
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStore
+
+
+@if (requestedUser != null)
+{
+    <h1>@requestedUser.UserName's page</h1>
+    @if (localUser != null)
+    {
+        if (localUser.Follows.Contains(id))
+        {
+            <button @onclick="UnfollowUser">Unfollow</button>
+        }
+        else
+        {
+            <button @onclick="FollowUser">Follow</button>
+        }
+
+    }
+
+    @if (messages != null)
+    {
+        <ul>
+
+            @foreach (var message in messages)
+            {
+                <MessageBox message="message"></MessageBox>
+            }
+        </ul>
+    }
+
+}
+else
+{
+    <p>Could not find the user</p>
+}
+
+@code
+{
+    [Parameter]
+    public string id { get; set; }
+
+    private User? requestedUser;
+    private Message[]? messages;
+    private User? localUser;
+
+    private async Task FollowUser()
+    {
+        var followDTO = new FollowDTO { WhoID = localUser!.Id, WhomID = id };
+
+        var response = await Http.PostAsJsonAsync("api/Users/follow/", followDTO);
+        if (response.IsSuccessStatusCode)
+        {
+            await UpdateLocalUser();
+
+            Console.WriteLine("Success in following user!");
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Unsucces in following user!");
+        }
+    }
+
+    private async Task UnfollowUser()
+    {
+        var followDTO = new FollowDTO { WhoID = localUser!.Id, WhomID = id };
+
+        var response = await Http.PostAsJsonAsync("api/Users/unfollow/", followDTO);
+        if (response.IsSuccessStatusCode)
+        {
+            await UpdateLocalUser();
+
+            Console.WriteLine("Success in unfollowing user!");
+            StateHasChanged();
+
+        }
+        else
+        {
+            Console.WriteLine("Unsuccess in unfollowing user!");
+        }
+    }
+
+    private async Task UpdateLocalUser()
+    {
+        await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<User>("api/Users/" + localUser.Id));
+        localUser = await localStore.GetItemAsync<User>("user");
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        requestedUser = await Http.GetFromJsonAsync<User>("api/Users/" + id);
+        messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/userID/" + id);
+        localUser = await localStore.GetItemAsync<User>("user");
+    }
+}
