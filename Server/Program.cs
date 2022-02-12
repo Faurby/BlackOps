@@ -16,7 +16,6 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
