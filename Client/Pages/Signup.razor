@@ -42,7 +42,7 @@
         var availabilityResponse = await Http.GetAsync("api/Users/username/" + user.UserName);
         if(availabilityResponse.IsSuccessStatusCode)
         {
-            Console.WriteLine("userName already in use.");
+            Console.WriteLine("userName already in use."); 
             return;
         } 
         
