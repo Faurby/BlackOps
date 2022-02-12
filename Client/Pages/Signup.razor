@@ -2,6 +2,8 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService localStore
+@inject IModalService modal
+@using Components
 @using MiniTwit.Shared
 
 <h1>Create user</h1>
@@ -31,7 +33,6 @@
 
 @code {
     private User user = new();
-
     private async Task HandleValidSubmit()
     {
         //user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
@@ -42,16 +43,20 @@
         var availabilityResponse = await Http.GetAsync("api/Users/username/" + user.UserName);
         if(availabilityResponse.IsSuccessStatusCode)
         {
-            Console.WriteLine("userName already in use."); 
+            // Add parameter for the modal. Parameter must match [Parameter] in razor component
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(ErrorBox.message), "Username already in use!");
+            modal.Show<ErrorBox>("Error", parameters);
             return;
         } 
         
+        // If success, create user in DB and navigate to index page (force reload).
         var response = await Http.PostAsJsonAsync("api/Users", user);
         if (response.IsSuccessStatusCode)
         {
             var uri = $"{NavigationManager.BaseUri}";
 
-            NavigationManager.NavigateTo(uri);
+            NavigationManager.NavigateTo(uri, true);
         }
     }
 

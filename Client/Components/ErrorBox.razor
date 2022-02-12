@@ -1,27 +1,16 @@
 @page "/popupdemo"
 @inject IModalService modal
-@inject NavigationManager NavigationManager
 
-<div class="messagebox" @onclick="NavigateToUserpage">
-    <div class="byline">
-        <h2>@message.AuthorName</h2>
-        <p class="timestamp">@message.Timestamp</p>
-    </div>
+<h2>@headline</h2>
 
-    <p class="text">@message.Text</p>
-</div>
+<p>@message</p>
 
 @code
 {
     [Parameter]
-    public Message? message { get; set; }
+    public string headline { get; set; } = null!;
+    
+    [Parameter]
+    public string message { get; set; } = null!;
 
-    private void NavigateToUserpage()
-    {
-        if (message != null)
-        {
-            var uri = $"{NavigationManager.BaseUri}";
-            NavigationManager.NavigateTo(uri, true);
-        }
-    }
 }
