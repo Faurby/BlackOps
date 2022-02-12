@@ -29,7 +29,7 @@ public class MessagesController : ControllerBase
         return message;
     }
 
-    [HttpGet("/userID/{userID:length(24)}")]
+    [HttpGet("userID/{userID:length(24)}")]
     public async Task<ActionResult<List<Message>>> GetFromUserID(string userID)
     {
         var message = await _messagesService.GetMessageFromUserIDAsync(userID);

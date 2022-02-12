@@ -15,5 +15,5 @@ public class User
     public string Password { get; set; } = null!;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public HashSet<string>? Follows { get; set; } = new HashSet<string>();
+    public HashSet<string> Follows { get; set; } = new HashSet<string>();
 }

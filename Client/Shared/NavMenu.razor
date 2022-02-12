@@ -47,11 +47,17 @@
             </div>
         }
     </nav>
+
+    @if (signedIn)
+    {
+        <p>Signed in as @localUser!.UserName</p>
+    }
 </div>
 
 @code {
     private bool collapseNavMenu = true;
     private bool signedIn;
+    private User? localUser;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
@@ -62,6 +68,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        signedIn = (await localStore.GetItemAsync<User>("user") != null);
+        localUser = await localStore.GetItemAsync<User>("user");
+        signedIn = (localUser != null);
     }
 }

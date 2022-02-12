@@ -5,6 +5,12 @@
     border-radius: 1em;
     padding: 1em;
     margin-bottom: 1em;
+    transition: 0.3s;
+}
+
+.messagebox:hover {
+    background-color: #e6e3e3;
+    cursor: pointer;
 }
 
 .timestamp {
