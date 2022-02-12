@@ -35,7 +35,6 @@
 
     private async Task HandleValidSubmit()
     {
-
         // Checks if user exists in db
         var availabilityResponse = await Http.GetAsync("api/Users/username/" + fakeUser.UserName);
         if(!availabilityResponse.IsSuccessStatusCode)
@@ -46,7 +45,6 @@
             modal.Show<ErrorBox>("Error", parameters);
             return;
         } 
-
 
         var user = await Http.GetFromJsonAsync<User>("api/Users/signin/" + fakeUser.UserName + "&" + fakeUser.Password);
 

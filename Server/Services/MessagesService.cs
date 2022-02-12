@@ -38,4 +38,8 @@ public class MessagesService
 
     public async Task RemoveAsync(string id) =>
         await _messagesCollection.DeleteOneAsync(x => x.Id == id);
+
+    public async Task<List<Message>?> GetMessagesFromFollowing(User user) =>
+        await _messagesCollection.Find(x => user.Follows.Contains(x.AuthorID)).ToListAsync();
+
 }
