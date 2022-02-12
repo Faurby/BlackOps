@@ -38,21 +38,30 @@
 
         await localStore.SetItemAsync("user", user);
 
-        //Checking Username availability
+        // Checking Username availability
         var availabilityResponse = await Http.GetAsync("api/Users/username/" + user.UserName);
-        if(availabilityResponse.IsSuccessStatusCode)
+        if (availabilityResponse.IsSuccessStatusCode)
         {
             Console.WriteLine("userName already in use.");
             return;
-        } 
-        
+        }
+
         var response = await Http.PostAsJsonAsync("api/Users", user);
         if (response.IsSuccessStatusCode)
         {
+
+            await UpdateLocalUser();
+
             var uri = $"{NavigationManager.BaseUri}";
 
-            NavigationManager.NavigateTo(uri);
+            // true means force reload next site. Updates NavMenu.
+            NavigationManager.NavigateTo(uri, true);
         }
+    }
+
+    private async Task UpdateLocalUser()
+    {
+        await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<User>("api/Users/username/" + user.UserName));
     }
 
     @* private void Cancel()
