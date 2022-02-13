@@ -1,0 +1,74 @@
+﻿@inject Blazored.LocalStorage.ILocalStorageService localStore
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">MiniTwit</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Public Timeline
+            </NavLink>
+        </div>
+        @if (!signedIn)
+        {
+            Console.WriteLine("User is not signed in");
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="signup">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Sign up
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="signin">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Sign in
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            Console.WriteLine("User is signed in!");
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="mytimeline">
+                    <span class="oi oi-plus" aria-hidden="true"></span> My Timeline
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="signout">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Sign out
+                </NavLink>
+            </div>
+        }
+    </nav>
+
+    @if (signedIn)
+    {
+        <p>Signed in as @localUser!.UserName</p>
+    }
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool signedIn;
+    private User? localUser;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        localUser = await localStore.GetItemAsync<User>("user");
+        signedIn = (localUser != null);
+    }
+}

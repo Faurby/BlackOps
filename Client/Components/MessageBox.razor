@@ -1,0 +1,26 @@
+@inject NavigationManager NavigationManager
+
+
+<div class="messagebox" @onclick="NavigateToUserpage">
+    <div class="byline">
+        <h2>@message.AuthorName</h2>
+        <p class="timestamp">@message.Timestamp</p>
+    </div>
+
+    <p class="text">@message.Text</p>
+</div>
+
+@code
+{
+    [Parameter]
+    public Message? message { get; set; }
+
+    private void NavigateToUserpage()
+    {
+        if (message != null)
+        {
+            var uri = $"{NavigationManager.BaseUri}/user/" + message.AuthorID;
+            NavigationManager.NavigateTo(uri);
+        }
+    }
+}

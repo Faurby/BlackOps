@@ -1,0 +1,30 @@
+.messagebox {
+    margin: auto;
+    width: 50%;
+    border: 2px solid;
+    border-radius: 1em;
+    padding: 1em;
+    margin-bottom: 1em;
+    transition: 0.3s;
+}
+
+.messagebox:hover {
+    background-color: #e6e3e3;
+    cursor: pointer;
+}
+
+.timestamp {
+    font-size: small;
+    color: grey;
+    margin-bottom: 0;
+}
+
+.byline {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0;
+    gap: 1em;
+}
+
+.text {}

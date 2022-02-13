@@ -1,0 +1,31 @@
+@page "/"
+@using MiniTwit.Client.Components
+@using MiniTwit.Shared
+@inject HttpClient Http
+
+<PageTitle>MiniTwit</PageTitle>
+
+<div class=page>
+  <h1>Public Timeline</h1>
+
+  @if (messages != null)
+  {
+    <ul>
+
+      @foreach (var message in messages)
+      {
+        <MessageBox message="message"></MessageBox>
+      }
+    </ul>
+  }
+
+</div>
+
+@code {
+  private Message[]? messages;
+
+  protected override async Task OnInitializedAsync()
+  {
+    messages = await Http.GetFromJsonAsync<Message[]>("api/Messages");
+  }
+}
