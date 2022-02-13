@@ -55,12 +55,7 @@ else
         {
             await UpdateLocalUser();
 
-            Console.WriteLine("Success in following user!");
             StateHasChanged();
-        }
-        else
-        {
-            Console.WriteLine("Unsucces in following user!");
         }
     }
 
@@ -73,13 +68,8 @@ else
         {
             await UpdateLocalUser();
 
-            Console.WriteLine("Success in unfollowing user!");
             StateHasChanged();
 
-        }
-        else
-        {
-            Console.WriteLine("Unsuccess in unfollowing user!");
         }
     }
 

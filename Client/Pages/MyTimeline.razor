@@ -25,7 +25,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/followingMessages/" + localUser);
         localUser = await localStore.GetItemAsync<User>("user");
+        messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/followingMessages/" + localUser!.Id);
     }
 }
