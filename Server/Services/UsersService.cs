@@ -31,7 +31,6 @@ public class UsersService
         await _usersCollection.Find(x => x.UserName == username).FirstOrDefaultAsync();
     public async Task<User?> Signin(string username, string password) =>
         await _usersCollection.Find(x => x.UserName == username && x.Password == password).FirstOrDefaultAsync();
-
     public async Task CreateAsync(User newUser) =>
         await _usersCollection.InsertOneAsync(newUser);
 
