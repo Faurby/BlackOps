@@ -7,16 +7,17 @@
 
 <h1>Sign in</h1>
 
-<EditForm Model="@fakeUser" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@toBeLoggedInUser" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="form-group">
         <label for="Username">Username</label>
-        <InputText id="Username" @bind-Value="fakeUser.UserName" class="form-control" autocomplete="off" />
+        <InputText id="Username" @bind-Value="toBeLoggedInUser.UserName" class="form-control" autocomplete="off" />
     </div>
     <div class="form-group">
         <label for="Password">Password</label>
-        <InputText id="Password" type="password" @bind-Value="fakeUser.Password" class="form-control" autocomplete="off" />
+        <InputText id="Password" type="password" @bind-Value="toBeLoggedInUser.Password" class="form-control"
+            autocomplete="off" />
     </div>
     <div class="form-group">
         <br />
@@ -27,31 +28,36 @@
 </EditForm>
 
 @code {
-    private User fakeUser = new();
+    // toBeLoggedInUser is used to store the temp information, before we actually try to sign in.
+    private User toBeLoggedInUser = new();
 
     private async Task HandleValidSubmit()
     {
         // Checks if user exists in db
-        var availabilityResponse = await Http.GetAsync("api/Users/username/" + fakeUser.UserName);
-        if(!availabilityResponse.IsSuccessStatusCode)
+        var availabilityResponse = await Http.GetAsync("api/Users/username/" + toBeLoggedInUser.UserName);
+        if (!availabilityResponse.IsSuccessStatusCode)
         {
             // Add parameter for the modal. Parameter must match [Parameter] in razor component
             var parameters = new ModalParameters();
             parameters.Add(nameof(ErrorBox.message), "User does not exist or you entered invalid credentials");
             modal.Show<ErrorBox>("Error", parameters);
             return;
-        } 
-
-        var user = await Http.GetFromJsonAsync<User>("api/Users/signin/" + fakeUser.UserName + "&" + fakeUser.Password);
-
-        if (user != null)
-        {
-            // Sets local storage user to logged in user.
-            await localStore.SetItemAsync("user", user);
-
-            var uri = $"{NavigationManager.BaseUri}";
-            NavigationManager.NavigateTo(uri, true);
         }
+
+        // User exists. We request the user from the db
+        var user = await Http.GetFromJsonAsync<User>("api/Users/signin/" + toBeLoggedInUser.UserName + "&" +
+        toBeLoggedInUser.Password);
+
+        //TODO: Exception handling, if user is 404 make error box modal, instead of current implmenetation
+        // using 2 API requests
+
+        // Sets local storage user to logged in user.
+        await localStore.SetItemAsync("user", user);
+
+        // Navigate to base page
+        var uri = $"{NavigationManager.BaseUri}";
+        NavigationManager.NavigateTo(uri, true);
+
     }
 
     @* private void Cancel()
