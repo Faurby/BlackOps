@@ -2,6 +2,7 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 @inject HttpClient Http
 
+
 @* Show all you're followings messages  *@
 
 <PageTitle>MiniTwit</PageTitle>
@@ -11,10 +12,9 @@
 @if (messages != null)
 {
     <ul>
-
         @foreach (var message in messages)
         {
-            <MessageBox message="message"></MessageBox>
+            <MessageBox message="message" ></MessageBox>
         }
     </ul>
 }

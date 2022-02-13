@@ -27,4 +27,6 @@
     gap: 1em;
 }
 
-.text {}
+img {
+    padding-bottom: 2em;
+}

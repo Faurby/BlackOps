@@ -20,8 +20,14 @@ public class MessagesService
         _usersCollection = mongoDatabase.GetCollection<User>(miniTwitDatabaseSettings.Value.UsersCollectionName);
     }
 
-    public async Task<List<Message>> GetAsync() =>
-        await _messagesCollection.Find(_ => true).ToListAsync();
+    public async Task<List<Message>> GetAsync()
+    {
+        var messages = await _messagesCollection.Find(_ => true).ToListAsync();
+
+        messages.Reverse();
+
+        return messages;
+    }
 
     public async Task<Message?> GetAsync(string id) =>
         await _messagesCollection.Find(x => x.Id == id).FirstOrDefaultAsync();

@@ -1,11 +1,13 @@
 @inject NavigationManager NavigationManager
+@inject HttpClient Http
 
-@*  Message box is used in Index and MyTimeline, as the "wall" or "feed" of messages from users. 
+@* Message box is used in Index and MyTimeline, as the "wall" or "feed" of messages from users.
     It is a reusable template for displaying messages. *@
 
 <div class="messagebox" @onclick="NavigateToUserpage">
     <div class="byline">
-        <h2>@message.AuthorName</h2>
+        <img src=@gravLink>
+        <h2>@message!.AuthorName</h2>
         <p class="timestamp">@message.Timestamp</p>
     </div>
 
@@ -17,6 +19,7 @@
     // Parameter is used when creating the component, you can give it a parameter to use.
     [Parameter]
     public Message? message { get; set; }
+    private string gravLink;
 
     // On click, navigate to the desired users page
     private void NavigateToUserpage()
@@ -26,5 +29,30 @@
             var uri = $"{NavigationManager.BaseUri}/user/" + message.AuthorID;
             NavigationManager.NavigateTo(uri);
         }
+    }
+
+    private async Task<string> GenerateGravatarLink(int size)
+    {
+        var user = await Http.GetFromJsonAsync<User>("api/Users/" + message!.AuthorID);
+
+        if (user.Email != null)
+        {
+            var utilityDTO = await Http.GetFromJsonAsync<UtilityDTO>("api/Utility/md5/" + user!.Email.Trim());
+
+            return "https://www.gravatar.com/avatar/" + utilityDTO.hash + "?d=identicon&s=" + size;
+        }
+        else
+        {
+            var mockEmail = user.UserName + "@hotmail.com";
+            var utilityDTO = await Http.GetFromJsonAsync<UtilityDTO>("api/Utility/md5/" + mockEmail.Trim());
+
+            return "https://www.gravatar.com/avatar/" + utilityDTO.hash + "?d=identicon&s=" + size;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        gravLink = await GenerateGravatarLink(80);
+        Console.WriteLine("Gravlink is: " + gravLink);
     }
 }

@@ -11,6 +11,7 @@ builder.Services.Configure<MiniTwitDatabaseSettings>(builder.Configuration.GetSe
 
 builder.Services.AddSingleton<MessagesService>();
 builder.Services.AddSingleton<UsersService>();
+builder.Services.AddSingleton<Utility>();
 
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddControllersWithViews();
