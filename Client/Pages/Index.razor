@@ -3,6 +3,8 @@
 @using MiniTwit.Shared
 @inject HttpClient Http
 
+@* Base uri for the application Used as public timeline (showing all messages from all users) *@
+
 <PageTitle>MiniTwit</PageTitle>
 
 <div class=page>
@@ -26,6 +28,7 @@
 
   protected override async Task OnInitializedAsync()
   {
+    // Get all messages through the API
     messages = await Http.GetFromJsonAsync<Message[]>("api/Messages");
   }
 }

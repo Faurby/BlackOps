@@ -2,6 +2,7 @@
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 
+@* Sign out. Remove localStore "user" and navigate back to main page, force reloading *@
 
 @code {
     protected override async Task OnInitializedAsync()
