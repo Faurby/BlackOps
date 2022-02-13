@@ -24,6 +24,7 @@ public class MessagesService
     {
         var messages = await _messagesCollection.Find(_ => true).ToListAsync();
 
+        // TODO: Do this smarter haha. Make DB automatically insert messages in descending order of timestamps
         messages.Reverse();
 
         return messages;
