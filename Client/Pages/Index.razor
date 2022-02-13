@@ -2,6 +2,7 @@
 @using MiniTwit.Client.Components
 @using MiniTwit.Shared
 @inject HttpClient Http
+@inject IModalService modal
 
 @* Base uri for the application Used as public timeline (showing all messages from all users) *@
 
@@ -9,7 +10,7 @@
 
 <div class=page>
   <h1>Public Timeline</h1>
-
+  <button @onclick="() => CreatePost()">Create post</button>
   @if (messages != null)
   {
     <ul>
@@ -31,4 +32,9 @@
     // Get all messages through the API
     messages = await Http.GetFromJsonAsync<Message[]>("api/Messages");
   }
+  private void CreatePost()
+    {
+      var parameters = new ModalParameters();
+      modal.Show<NewPostBox>("Create a new post", parameters);
+    }
 }
