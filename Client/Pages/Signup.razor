@@ -38,9 +38,9 @@
 
         await localStore.SetItemAsync("user", user);
 
-        //Checking Username availability
+        // Checking Username availability
         var availabilityResponse = await Http.GetAsync("api/Users/username/" + user.UserName);
-        if(availabilityResponse.IsSuccessStatusCode)
+        if (availabilityResponse.IsSuccessStatusCode)
         {
             // Add parameter for the modal. Parameter must match [Parameter] in razor component
             var parameters = new ModalParameters();
@@ -50,13 +50,25 @@
         } 
         
         // If success, create user in DB and navigate to index page (force reload).
+              
         var response = await Http.PostAsJsonAsync("api/Users", user);
         if (response.IsSuccessStatusCode)
         {
+
+            await UpdateLocalUser();
+
             var uri = $"{NavigationManager.BaseUri}";
+
+
+            // true means force reload next site. Updates NavMenu.
 
             NavigationManager.NavigateTo(uri, true);
         }
+    }
+
+    private async Task UpdateLocalUser()
+    {
+        await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<User>("api/Users/username/" + user.UserName));
     }
 
     @* private void Cancel()
