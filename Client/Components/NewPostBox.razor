@@ -1,0 +1,41 @@
+@page "/CreatePost"
+@inject NavigationManager NavigationManager
+@inject IModalService modal
+@inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStore
+
+
+<EditForm Model="@text" OnValidSubmit="@HandleValidSubmit">
+    <div class="form-group">
+        @if(text.Length > 280)
+        {
+            <label for="textarea">Please write less than 280 characters</label>
+        }
+        else
+        {
+            <label for="textarea">What is on your mind?</label>
+        }
+        <InputText id="textarea" @bind-Value="text" class="form-control" autocomplete="off" />
+    </div>
+    <div class="form-group">
+        <br />
+        <button type="submit" class="btn btn-success">Publish</button>
+    </div>
+</EditForm>
+@code
+{
+    private string text = "";
+    private User? localUser;
+
+    private async Task HandleValidSubmit()
+    {
+        localUser = await localStore.GetItemAsync<User>("user");
+        var message = new Message {AuthorID = localUser.Id, AuthorName = localUser.UserName, Text = text};
+        var response = await Http.PostAsJsonAsync("api/Messages", message);
+        if (response.IsSuccessStatusCode)
+        {
+            var uri = $"{NavigationManager.BaseUri}";
+            NavigationManager.NavigateTo(uri, true);
+        }
+    }
+}

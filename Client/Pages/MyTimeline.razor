@@ -1,11 +1,13 @@
 @page "/mytimeline"
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 @inject HttpClient Http
+@inject IModalService modal
+
 
 <PageTitle>MiniTwit</PageTitle>
 
 <h1>My Timeline</h1>
-
+<button @onclick="() => CreatePost()">Create post</button>
 @if (messages != null)
 {
     <ul>
@@ -27,5 +29,9 @@
     {
         messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/followingMessages/" + localUser);
         localUser = await localStore.GetItemAsync<User>("user");
+    }
+    private async Task CreatePost()
+    {
+        modal.Show<NewPostBox>();
     }
 }
