@@ -9,6 +9,7 @@
     <h1>@requestedUser.UserName's page</h1>
     @if (localUser != null)
     {
+        // If localUser already follows requestedUser, write unfollow and vice versa
         if (localUser.Follows.Contains(id))
         {
             <button @onclick="UnfollowUser">Unfollow</button>
@@ -20,6 +21,7 @@
 
     }
 
+    // If requestedUser has messages, show them
     @if (messages != null)
     {
         <ul>
@@ -46,6 +48,7 @@ else
     private Message[]? messages;
     private User? localUser;
 
+    // Follow the user via posting a followDTO to UsersController (followDTO simply holds whoID & whomID)
     private async Task FollowUser()
     {
         var followDTO = new FollowDTO { WhoID = localUser!.Id, WhomID = id };
@@ -53,6 +56,8 @@ else
         var response = await Http.PostAsJsonAsync("api/Users/follow/", followDTO);
         if (response.IsSuccessStatusCode)
         {
+            // Update the localUser and call StateHasChanged(). StateHasChanged() makes blazor look at all variables used in
+            // code and updates components if necessary.
             await UpdateLocalUser();
 
             StateHasChanged();
@@ -79,7 +84,7 @@ else
         localUser = await localStore.GetItemAsync<User>("user");
     }
 
-
+    // Get requestedUser, their messages and localUser
     protected override async Task OnInitializedAsync()
     {
         requestedUser = await Http.GetFromJsonAsync<User>("api/Users/" + id);

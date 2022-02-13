@@ -34,9 +34,7 @@
     private User user = new();
     private async Task HandleValidSubmit()
     {
-        //user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
-        await localStore.SetItemAsync("user", user);
+        // TODO: password hash somewhere around here.
 
         // Checking Username availability
         var availabilityResponse = await Http.GetAsync("api/Users/username/" + user.UserName);
@@ -47,7 +45,7 @@
             parameters.Add(nameof(ErrorBox.message), "Username already in use!");
             modal.Show<ErrorBox>("Error", parameters);
             return;
-        } 
+        }
         
         // If success, create user in DB and navigate to index page (force reload).
               
@@ -61,11 +59,11 @@
 
 
             // true means force reload next site. Updates NavMenu.
-
             NavigationManager.NavigateTo(uri, true);
         }
     }
 
+    // When signing up, we dont know the id of user, so we must update the localUser before moving on (and losing the variable)
     private async Task UpdateLocalUser()
     {
         await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<User>("api/Users/username/" + user.UserName));

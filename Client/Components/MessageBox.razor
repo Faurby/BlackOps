@@ -1,5 +1,7 @@
 @inject NavigationManager NavigationManager
 
+@*  Message box is used in Index and MyTimeline, as the "wall" or "feed" of messages from users. 
+    It is a reusable template for displaying messages. *@
 
 <div class="messagebox" @onclick="NavigateToUserpage">
     <div class="byline">
@@ -12,9 +14,11 @@
 
 @code
 {
+    // Parameter is used when creating the component, you can give it a parameter to use.
     [Parameter]
     public Message? message { get; set; }
 
+    // On click, navigate to the desired users page
     private void NavigateToUserpage()
     {
         if (message != null)
