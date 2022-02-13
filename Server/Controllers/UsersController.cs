@@ -91,7 +91,7 @@ public class UsersController : ControllerBase
         {
             return NotFound();
         }
-            return Ok(user);
+        return Ok(user);
     }
 
     [HttpPost("follow")]

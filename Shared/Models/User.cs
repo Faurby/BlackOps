@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -11,8 +12,9 @@ public class User
 
     [BsonElement("Name")]
     public string UserName { get; set; } = null!;
-
     public string Password { get; set; } = null!;
+    [EmailAddress]
+    public string Email { get; set; } = null!;
 
     [BsonRepresentation(BsonType.ObjectId)]
     public HashSet<string> Follows { get; set; } = new HashSet<string>();
