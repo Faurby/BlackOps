@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService localStore
+@inject IModalService modal
 @using MiniTwit.Shared
 
 <h1>Sign in</h1>
@@ -23,7 +24,7 @@
     </div>
     <div class="form-group">
         <br />
-        <button type="submit" class="btn btn-success">Create</button>
+        <button type="submit" class="btn btn-success">Sign in</button>
         <button type="reset" class="btn btn-secondary">Reset</button>
         @* <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button> *@
     </div>
@@ -34,10 +35,22 @@
 
     private async Task HandleValidSubmit()
     {
+        // Checks if user exists in db
+        var availabilityResponse = await Http.GetAsync("api/Users/username/" + fakeUser.UserName);
+        if(!availabilityResponse.IsSuccessStatusCode)
+        {
+            // Add parameter for the modal. Parameter must match [Parameter] in razor component
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(ErrorBox.message), "User does not exist or you entered invalid credentials");
+            modal.Show<ErrorBox>("Error", parameters);
+            return;
+        } 
+
         var user = await Http.GetFromJsonAsync<User>("api/Users/signin/" + fakeUser.UserName + "&" + fakeUser.Password);
 
         if (user != null)
         {
+            // Sets local storage user to logged in user.
             await localStore.SetItemAsync("user", user);
 
             var uri = $"{NavigationManager.BaseUri}";

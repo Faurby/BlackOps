@@ -1,0 +1,16 @@
+@page "/popupdemo"
+@inject IModalService modal
+
+<h2>@headline</h2>
+
+<p>@message</p>
+
+@code
+{
+    [Parameter]
+    public string headline { get; set; } = null!;
+    
+    [Parameter]
+    public string message { get; set; } = null!;
+
+}
