@@ -29,6 +29,19 @@ public class MessagesController : ControllerBase
         return message;
     }
 
+    // [HttpGet("followingMessages/{userID}")]
+    // public async Task<ActionResult<List<Message>>> GetFollowingMessages(string userID)
+    // {
+    //     var messages = await _messagesService.GetMessagesFromFollowing(user);
+
+    //     if (messages is null)
+    //     {
+    //         return NotFound();
+    //     }
+
+    //     return messages;
+    // }
+
     [HttpGet("userID/{userID:length(24)}")]
     public async Task<ActionResult<List<Message>>> GetFromUserID(string userID)
     {
