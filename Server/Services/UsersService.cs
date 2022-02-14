@@ -29,6 +29,10 @@ public class UsersService
 
     public async Task<User?> GetUsernameAsync(string username) =>
         await _usersCollection.Find(x => x.UserName == username).FirstOrDefaultAsync();
+    
+    public async Task<string> GetSalt(string username) =>
+        (await _usersCollection.Find(x => x.UserName == username).FirstOrDefaultAsync()).PasswordSalt!;
+    
     public async Task<User?> Signin(string username, string password) =>
         await _usersCollection.Find(x => x.UserName == username && x.Password == password).FirstOrDefaultAsync();
     public async Task CreateAsync(User newUser) =>

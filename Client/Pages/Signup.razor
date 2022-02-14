@@ -50,6 +50,7 @@
         // If success, create user in DB and navigate to index page (force reload).
               
         var response = await Http.PostAsJsonAsync("api/Users", user);
+
         if (response.IsSuccessStatusCode)
         {
 

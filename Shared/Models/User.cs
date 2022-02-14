@@ -13,6 +13,7 @@ public class User
     [BsonElement("Name")]
     public string UserName { get; set; } = null!;
     public string Password { get; set; } = null!;
+    public string? PasswordSalt { get; set; } // For ID and Password salt we should get rid of th nullable property by using DTOs
     [EmailAddress]
     public string Email { get; set; } = null!;
 
