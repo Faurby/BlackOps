@@ -1,6 +1,10 @@
 @page "/mytimeline"
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 @inject HttpClient Http
+@inject IModalService modal
+
+
+@* Show all you're followings messages  *@
 
 
 @* Show all you're followings messages  *@
@@ -8,7 +12,7 @@
 <PageTitle>MiniTwit</PageTitle>
 
 <h1>My Timeline</h1>
-
+<button @onclick="() => CreatePost()">Create post</button>
 @if (messages != null)
 {
     <ul>
@@ -30,5 +34,9 @@
         // Get the local users (signed in as) and get all followings messages
         localUser = await localStore.GetItemAsync<User>("user");
         messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/followingMessages/" + localUser!.Id);
+    }
+    private async Task CreatePost()
+    {
+        modal.Show<NewPostBox>();
     }
 }
