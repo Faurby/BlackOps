@@ -1,53 +1,65 @@
 ﻿@inject Blazored.LocalStorage.ILocalStorageService localStore
+@inject IModalService modal
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">MiniTwit</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Public Timeline
-            </NavLink>
+<div class="nav-menu-container">
+    <div>
+        <div class="top-row ps-3 navbar">
+            <div class="container-fluid">
+                <!-- <a class="navbar-brand" href="">MiniTwit</a> -->
+                <a class="navbar-brand" href=""><img src="images/minitwit.png" alt="Minitwit" class="logo"></a>
+                <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
         </div>
-        @if (!signedIn)
-        {
 
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="signup">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Sign up
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="signin">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Sign in
-                </NavLink>
-            </div>
-        }
-        else
-        {
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="mytimeline">
-                    <span class="oi oi-plus" aria-hidden="true"></span> My Timeline
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="signout">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Sign out
-                </NavLink>
-            </div>
-        }
-    </nav>
+        <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+            <nav class="flex-column">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true"></span> Public Timeline
+                    </NavLink>
+                </div>
+                @if (!signedIn)
+                {
 
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="signup">
+                            <span class="oi oi-plus" aria-hidden="true"></span> Sign up
+                        </NavLink>
+                    </div>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="signin">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Sign in
+                        </NavLink>
+                    </div>
+                }
+                else
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="mytimeline">
+                            <span class="oi oi-plus" aria-hidden="true"></span> My Timeline
+                        </NavLink>
+                    </div>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="signout">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Sign out
+                        </NavLink>
+                    </div>
+                    <div class="nav-item px-3">
+                        <div class="button-container">
+                            <button class="button" @onclick="CreatePost">Create post</button>
+                        </div>
+                    </div>
+                }
+            </nav>
+        </div>
+    </div>
     @if (signedIn)
     {
-        <p>Signed in as @localUser!.UserName</p>
+        <div class=user>
+            <p>Signed in as @localUser!.UserName</p>
+        </div>
     }
 </div>
 
@@ -67,5 +79,10 @@
     {
         localUser = await localStore.GetItemAsync<User>("user");
         signedIn = (localUser != null);
+    }
+    private void CreatePost()
+    {
+        var parameters = new ModalParameters();
+        modal.Show<NewPostBox>("Create a new post", parameters);
     }
 }

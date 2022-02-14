@@ -7,9 +7,11 @@ p {
     padding-left: 1.7em;
 }
 
-.top-row {
-    height: 3.5rem;
-    background-color: rgba(0, 0, 0, 0.4);
+.nav-menu-container {
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
 }
 
 .navbar-brand {
@@ -26,6 +28,7 @@ p {
 .nav-item {
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
+    transition: all .2s ease-in-out;
 }
 
 .nav-item:first-of-type {
@@ -36,9 +39,47 @@ p {
     padding-bottom: 1rem;
 }
 
+.logo {
+    width: 3rem;
+    height: 3rem;
+    transition: all .2s ease-in-out;
+}
+.logo:hover { transform: scale(1.1); }
+
+.button { 
+    background-color: rgb(29, 155, 240);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 8px 28px;
+    min-width: 52px;
+    border-radius: 9999px;
+    font-family: TwitterChirp, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: rgb(255, 255, 255);
+    align-items: center;
+    width: 230px;
+    height: 50px;
+    border-style: none;
+    transition: all .2s ease-in-out;
+}
+.button:hover { 
+    background-color: rgb(26, 140, 216);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 10px 30px;
+}
+
+.button-container {
+    margin-bottom: 16px;
+    margin-top: 16px;
+    width: 90%;
+}
+
+.user ::deep p {
+    background-color: rgba(15, 20, 25, 0.1);
+}
+
+
 .nav-item ::deep a {
-    color: #d7d7d7;
-    border-radius: 4px;
+    color: #0F141A;
+    border-radius: 99999px;
     height: 3rem;
     display: flex;
     align-items: center;
@@ -46,13 +87,11 @@ p {
 }
 
 .nav-item ::deep a.active {
-    background-color: rgba(255, 255, 255, 0.25);
-    color: white;
+    background-color: rgba(15, 20, 25, 0.1);
 }
 
 .nav-item ::deep a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
+    background-color: rgba(15, 20, 25, 0.05);
 }
 
 @media (min-width: 641px) {

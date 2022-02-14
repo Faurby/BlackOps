@@ -1,5 +1,6 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
+@using Minitwit.Client.Helper;
 
 
 @*  Message box is used in Index and MyTimeline, as the "wall" or "feed" of messages from users. 
@@ -32,28 +33,12 @@
         }
     }
 
-    private async Task<string> GenerateGravatarLink(int size)
-    {
-        var user = await Http.GetFromJsonAsync<User>("api/Users/" + message!.AuthorID);
-
-        if (user.Email != null)
-        {
-            var utilityDTO = await Http.GetFromJsonAsync<UtilityDTO>("api/Utility/md5/" + user!.Email.Trim());
-
-            return "https://www.gravatar.com/avatar/" + utilityDTO.hash + "?d=identicon&s=" + size;
-        }
-        else
-        {
-            var mockEmail = user.UserName + "@hotmail.com";
-            var utilityDTO = await Http.GetFromJsonAsync<UtilityDTO>("api/Utility/md5/" + mockEmail.Trim());
-
-            return "https://www.gravatar.com/avatar/" + utilityDTO.hash + "?d=identicon&s=" + size;
-        }
+    private async Task<string> getGravatar(){
+        return await Gravatar.GenerateGravatarLink(Http,message!.AuthorID,64);
     }
-
     protected override async Task OnInitializedAsync()
     {
-        gravLink = await GenerateGravatarLink(80);
+        gravLink = await getGravatar();
         Console.WriteLine("Gravlink is: " + gravLink);
     }
 }
