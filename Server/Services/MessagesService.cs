@@ -20,8 +20,15 @@ public class MessagesService
         _usersCollection = mongoDatabase.GetCollection<User>(miniTwitDatabaseSettings.Value.UsersCollectionName);
     }
 
-    public async Task<List<Message>> GetAsync() =>
-        await _messagesCollection.Find(_ => true).ToListAsync();
+    public async Task<List<Message>> GetAsync()
+    {
+        var messages = await _messagesCollection.Find(_ => true).ToListAsync();
+
+        // TODO: Do this smarter haha. Make DB automatically insert messages in descending order of timestamps
+        messages.Reverse();
+
+        return messages;
+    }
 
     public async Task<Message?> GetAsync(string id) =>
         await _messagesCollection.Find(x => x.Id == id).FirstOrDefaultAsync();

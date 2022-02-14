@@ -6,6 +6,9 @@
 
 @* Show all you're followings messages  *@
 
+
+@* Show all you're followings messages  *@
+
 <PageTitle>MiniTwit</PageTitle>
 
 <h1>My Timeline</h1>
@@ -13,10 +16,9 @@
 @if (messages != null)
 {
     <ul>
-
         @foreach (var message in messages)
         {
-            <MessageBox message="message"></MessageBox>
+            <MessageBox message="message" ></MessageBox>
         }
     </ul>
 }
@@ -30,7 +32,6 @@
     protected override async Task OnInitializedAsync()
     {
         // Get the local users (signed in as) and get all followings messages
-
         localUser = await localStore.GetItemAsync<User>("user");
         messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/followingMessages/" + localUser!.Id);
     }
