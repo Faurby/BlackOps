@@ -1,5 +1,8 @@
 ﻿@inject Blazored.LocalStorage.ILocalStorageService localStore
 @inject IModalService modal
+@inject HttpClient Http
+@using Minitwit.Client.Helper;
+
 
 <div class="nav-menu-container">
     <div>
@@ -57,8 +60,12 @@
     </div>
     @if (signedIn)
     {
-        <div class=user>
-            <p>Signed in as @localUser!.UserName</p>
+        <div class=signed-in-container>
+            <img class=signed-in-gravatar src=@gravLink>
+            <div class=signed-in-text>
+                <p class=signed-in-username>@localUser!.UserName</p>
+                <p class=signed-in-email>@localUser!.Email</p>
+            </div>
         </div>
     }
 </div>
@@ -67,9 +74,9 @@
     private bool collapseNavMenu = true;
     private bool signedIn;
     private User? localUser;
+    private string gravLink;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
@@ -78,7 +85,12 @@
     protected override async Task OnInitializedAsync()
     {
         localUser = await localStore.GetItemAsync<User>("user");
-        signedIn = (localUser != null);
+
+        localUser = await localStore.GetItemAsync<User>("user");
+        if(localUser != null){
+            signedIn = true;
+            gravLink = await Gravatar.GenerateGravatarLink(Http,localUser.Id,64);
+        }
     }
     private void CreatePost()
     {
