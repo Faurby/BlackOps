@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MiniTwit.Shared;
+using System.Security.Cryptography;
 
 namespace MiniTwit.Server;
 
@@ -45,6 +46,15 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(User newUser)
     {
+        // Hash password
+        string plainPassword = newUser.Password;
+        string salt = PasswordEncryption.GenerateSalt(70);
+        string hashedPassword = PasswordEncryption.HashPassword(plainPassword, salt, 1000, 70);
+        newUser.Password = hashedPassword;
+        newUser.PasswordSalt = salt;
+
+        Console.WriteLine("plain password: " + plainPassword + "\nHashed password: " + hashedPassword + "\nSalt:" + salt  + "\n" + "\n");
+
         await _usersService.CreateAsync(newUser);
 
         return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
@@ -85,7 +95,12 @@ public class UsersController : ControllerBase
     [HttpGet("signin/{username}&{password}")]
     public async Task<ActionResult<User>> Signin(string username, string password)
     {
-        var user = await _usersService.Signin(username, password);
+        // Encrypt password to look for it in database
+        string salt = await _usersService.GetSalt(username);
+        string hashedPassword = PasswordEncryption.HashPassword(password, salt, 1000, 70);
+        Console.WriteLine("plain password: " + password + "\nHashed password: " + hashedPassword + "\nSalt:" + salt  + "\n" + "\n");
+
+        var user = await _usersService.Signin(username, hashedPassword);
 
         if (user is null)
         {
@@ -123,6 +138,26 @@ public class UsersController : ControllerBase
                 return NotFound();
             default:
                 return Conflict();
+        }
+    }
+}
+
+// Based on https://dev.to/1001binary/hashing-password-combining-with-salt-in-c-and-vb-net-2am9
+public class PasswordEncryption
+{
+    public static string GenerateSalt(int saltLength)
+    {
+        byte[] saltBytes = RandomNumberGenerator.GetBytes(saltLength);
+        return Convert.ToBase64String(saltBytes);
+    }
+
+    public static string HashPassword(string password, string salt, int nIterations, int hashLength)
+    {
+        byte[] saltBytes = Convert.FromBase64String(salt);
+
+        using (var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes, nIterations))
+        {
+            return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(hashLength));
         }
     }
 }
