@@ -1,8 +1,9 @@
 @page "/"
 @using MiniTwit.Shared
 @inject HttpClient Http
+@inject Blazored.LocalStorage.ILocalStorageService localStore
+@using Minitwit.Client.Helper;
 
-@* Base uri for the application Used as public timeline (showing all messages from all users) *@
 
 @* Base uri for the application Used as public timeline (showing all messages from all users) *@
 
@@ -10,25 +11,35 @@
 
 <div class=page>
   <h3>Public Timeline</h3>
+  <NewPostBox gravLink=@gravLink></NewPostBox>
+
   @if (messages != null)
   {
-    <ul>
-
       @foreach (var message in messages)
       {
         <MessageBox message="message"></MessageBox>
       }
-    </ul>
   }
 
 </div>
 
 @code {
   private Message[]? messages;
+  
+  
+  private bool signedIn;
+  private User? localUser;
+  private string gravLink;
 
   protected override async Task OnInitializedAsync()
   {
     // Get all messages through the API
     messages = await Http.GetFromJsonAsync<Message[]>("api/Messages");
-  }
+    
+    localUser = await localStore.GetItemAsync<User>("user");
+    if(localUser != null){
+      signedIn = true;
+      gravLink = await Gravatar.GenerateGravatarLink(Http,localUser.Id,64);
+    }
+  }  
 }

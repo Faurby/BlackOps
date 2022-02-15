@@ -1,0 +1,51 @@
+::deep .form-control {
+    resize: none;
+    border: none;
+    overflow: auto;
+    outline: none;
+    font-size: 20px;
+}
+
+::deep textarea, select, input, button { outline: none; }
+
+.tweet-compose-container {
+    border-bottom-color: #e7e7e7;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    padding: 20px;
+}
+
+.tweet-compose-upper {
+    display: flex;
+    justify-content: stretch;
+}
+.tweet-compose-lower {
+    display: flex;
+    justify-content: flex-end;
+}
+  
+.tweet-compose-compose {
+    flex-grow: 1.0;
+}
+  
+.tweet-compose-gravatar {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.button { 
+    background-color: rgb(29, 155, 240);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 8px 28px;
+    border-radius: 9999px;
+    font-family: TwitterChirp, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: rgb(255, 255, 255);
+    align-items: center;
+    border-style: none;
+    transition: all .2s ease-in-out;
+}
+.button:hover { 
+    background-color: rgb(26, 140, 216);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 10px 30px;
+}

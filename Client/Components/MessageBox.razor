@@ -7,13 +7,16 @@
     It is a reusable template for displaying messages. *@
 
 <div class="messagebox" @onclick="NavigateToUserpage">
-    <div class="byline">
-        <img src=@gravLink>
-        <h2>@message!.AuthorName</h2>
-        <p class="timestamp">@message.Timestamp</p>
+    <div class=avatar-slice>
+        <img class="avatar" src=@gravLink>
     </div>
-
-    <p class="text">@message.Text</p>
+    <div class=text-slice>
+        <div class="byline">
+            <p class="username">@message!.AuthorName</p>
+            <p class="timestamp">@message.Timestamp</p>
+        </div>
+        <p class="text">@message.Text</p>
+    </div>
 </div>
 
 @code
@@ -33,12 +36,9 @@
         }
     }
 
-    private async Task<string> getGravatar(){
-        return await Gravatar.GenerateGravatarLink(Http,message!.AuthorID,64);
-    }
     protected override async Task OnInitializedAsync()
     {
-        gravLink = await getGravatar();
+        gravLink = await Gravatar.GenerateGravatarLink(Http,message!.AuthorID,64);
         Console.WriteLine("Gravlink is: " + gravLink);
     }
 }
