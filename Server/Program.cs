@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.Configure<MiniTwitDatabaseSettings>(builder.Configuration.GetSection("MiniTwitDatabase"));
 
+//builder.WebHost.UseUrls("http://*:80");
+
 builder.Services.AddSingleton<MessagesService>();
 builder.Services.AddSingleton<UsersService>();
 builder.Services.AddSingleton<Utility>();
