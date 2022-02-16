@@ -37,6 +37,39 @@ public class SimController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("/msgs")]
+    public async Task<ActionResult<List<Message>>> GetMessages()
+    {
+        var messages = await _messagesService.GetAsync();
+
+        return messages;
+    }
+
+    [HttpGet("/msgs/{userID:length(24)}")]
+    public async Task<ActionResult<List<Message>>> GetMessagesFromUser(string userID)
+    {
+        var messages = await _messagesService.GetMessageFromUserIDAsync(userID);
+
+        if (messages is null)
+        {
+            return NotFound();
+        }
+
+        return messages.ToList();
+    }
+
+    [HttpPut("/msgs/{userID:length(24)}")]
+    public async Task<ActionResult> PostMessageAsUser(string userID, Message newMessage)
+    {
+        newMessage.Timestamp.ToLocalTime();
+        newMessage.AuthorID = userID;
+
+        await _messagesService.CreateAsync(newMessage);
+
+        return CreatedAtAction(null, new { id = newMessage.Id }, newMessage);
+
+    }
+
 
 
 }
