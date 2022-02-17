@@ -14,15 +14,9 @@ services:
       dockerfile: ./Dockerfile
     environment:
         ASPNETCORE_ENVIRONMENT: Production
-    #   ASPNETCORE_URLS: https://+;http://+
-    #   ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
-    #   ASPNETCORE_Kestrel__Certificates__Default__Password: 1234
-    #   ASPNETCORE_HTTPS_PORT:
     ports:
       - 5142:80
       - 7199:443
     container_name: webserver
     depends_on:
       - db
-    # volumes:
-    #   - C:/Users/daxzt/.aspnet/https:/https/
