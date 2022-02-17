@@ -7,8 +7,8 @@ services:
       - 27017:27017
       - 28017:28017
     container_name: db
-  server:
-    image: server
+  webserver:
+    image: webserver
     build:
       context: .
       dockerfile: ./Dockerfile
