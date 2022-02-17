@@ -58,7 +58,7 @@ public class SimController : ControllerBase
         return messages.ToList();
     }
 
-    [HttpPut("/msgs/{userID:length(24)}")]
+    [HttpPost("/msgs/{userID:length(24)}")]
     public async Task<ActionResult> PostMessageAsUser(string userID, Message newMessage)
     {
         newMessage.Timestamp.ToLocalTime();
@@ -74,6 +74,10 @@ public class SimController : ControllerBase
     public async Task<ActionResult<List<string>>> GetFollowersFromUser(string userID) =>
         await _usersService.GetFollowersAsync(userID);
 
+    //[HttpGet("/fllws/{userID:length(24)}")]
+
+    //public async Task<ActionResult> PostUserInFollowers(string userID) =>
+        //await _usersService.PostFollowerAsync(userID);
 
 
 }
