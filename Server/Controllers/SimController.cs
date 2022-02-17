@@ -26,21 +26,28 @@ public class SimController : ControllerBase
             return NotFound();
         }
 
+        Console.WriteLine("/sim/latest text: " + messages.FirstOrDefault().Text);
+
         return messages.First();
     }
 
     [HttpPost("/sim/register")]
-    public async Task<IActionResult> RegisterUser(User user)
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterSim user)
     {
-        await _usersService.CreateAsync(user);
+        await _usersService.CreateAsync(user.ConvertToUser());
 
-        return NoContent();
+        Console.WriteLine("Trying to create user!");
+        Console.WriteLine("Created user: " + user.username);
+
+        return StatusCode(204, "");
     }
 
     [HttpGet("/sim/msgs")]
     public async Task<ActionResult<List<Message>>> GetMessages()
     {
         var messages = await _messagesService.GetAsync();
+
+        Console.WriteLine("Returned all messages");
 
         return messages;
     }
@@ -55,6 +62,8 @@ public class SimController : ControllerBase
             return NotFound();
         }
 
+        Console.WriteLine("Returned all messages of user: " + userID);
+
         return messages.ToList();
     }
 
@@ -66,13 +75,19 @@ public class SimController : ControllerBase
 
         await _messagesService.CreateAsync(newMessage);
 
+        Console.WriteLine("Posted message to user: " + userID + " msg: " + newMessage.Text);
+
         return CreatedAtAction(null, new { id = newMessage.Id }, newMessage);
 
     }
 
     [HttpGet("/sim/fllws/{userID:length(24)}")]
-    public async Task<ActionResult<List<string>>> GetFollowersFromUser(string userID) =>
-        await _usersService.GetFollowersAsync(userID);
+    public async Task<ActionResult<List<string>>> GetFollowersFromUser(string userID)
+    {
+        Console.WriteLine("Returning followers for user: " + userID);
+
+        return await _usersService.GetFollowersAsync(userID);
+    }
 
     //HttpPost("/fllws/{userID:length(24)}")]
 

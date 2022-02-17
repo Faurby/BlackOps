@@ -24,7 +24,17 @@ builder.Services.AddSwaggerGen(c =>
     c.UseInlineDefinitionsForEnums();
 });
 
+builder.WebHost.UseKestrel(options => 
+    {
+        options.Limits.MinRequestBodyDataRate = null;
+        options.Limits.MinResponseDataRate = null;
+        options.Limits.MaxRequestBodySize = null;
+
+    });
+
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -39,8 +49,6 @@ else
 }
 app.UseSwagger();
 app.UseSwaggerUI();
-
-app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
