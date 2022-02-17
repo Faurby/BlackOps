@@ -21,6 +21,8 @@ public class UsersService
             miniTwitDatabaseSettings.Value.UsersCollectionName);
     }
 
+    public async Task<List<string>> GetFollowersAsync(string id) =>
+        (await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync()).Followers.ToList();
     public async Task<List<User>> GetAsync() =>
         await _usersCollection.Find(_ => true).ToListAsync();
 

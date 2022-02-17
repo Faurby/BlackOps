@@ -19,4 +19,7 @@ public class User
 
     [BsonRepresentation(BsonType.ObjectId)]
     public HashSet<string> Follows { get; set; } = new HashSet<string>();
+
+    [BsonRepresentation(BsonType.ObjectId)]
+    public HashSet<string> Followers { get; set; } = new HashSet<string>();
 }

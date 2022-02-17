@@ -70,6 +70,10 @@ public class SimController : ControllerBase
 
     }
 
+    [HttpGet("/fllws/{userID:length(24)}")]
+    public async Task<ActionResult<List<string>>> GetFollowersFromUser(string userID) =>
+        await _usersService.GetFollowersAsync(userID);
+
 
 
 }
