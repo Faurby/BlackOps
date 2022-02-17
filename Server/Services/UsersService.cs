@@ -49,12 +49,16 @@ public class UsersService
     public async Task<Status> Follow(string whoID, string whomID)
     {
         var user = (await _usersCollection.Find(x => x.Id == whoID).FirstOrDefaultAsync());
+        var userWhomToFollow = (await _usersCollection.Find(x => x.Id == whomID).FirstOrDefaultAsync());
 
 
         if (user != null)
         {
             user.Follows!.Add(whomID);
             await UpdateAsync(user.Id!, user);
+
+            userWhomToFollow.Followers.Add(whoID);
+            await UpdateAsync(userWhomToFollow.Id!, userWhomToFollow);
 
             return Status.Success;
         }
@@ -67,12 +71,17 @@ public class UsersService
     public async Task<Status> Unfollow(string whoID, string whomID)
     {
         var user = (await _usersCollection.Find(x => x.Id == whoID).FirstOrDefaultAsync());
+        var userWhomToUnfollow = (await _usersCollection.Find(x => x.Id == whomID).FirstOrDefaultAsync());
 
 
         if (user != null)
         {
             user.Follows?.Remove(whomID);
             await UpdateAsync(user.Id!, user);
+
+            userWhomToUnfollow.Followers.Remove(whoID);
+            await UpdateAsync(userWhomToUnfollow.Id!, userWhomToUnfollow);
+
             return Status.Success;
         }
         else
