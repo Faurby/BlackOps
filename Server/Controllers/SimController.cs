@@ -16,7 +16,7 @@ public class SimController : ControllerBase
         _usersService = usersService;
     }
 
-    [HttpGet("/latest")]
+    [HttpGet("/sim/latest")]
     public async Task<ActionResult<Message>> GetLatestMsg()
     {
         var messages = await _messagesService.GetAsync();
@@ -29,7 +29,7 @@ public class SimController : ControllerBase
         return messages.First();
     }
 
-    [HttpPost("/register")]
+    [HttpPost("/sim/register")]
     public async Task<IActionResult> RegisterUser(User user)
     {
         await _usersService.CreateAsync(user);
@@ -37,7 +37,7 @@ public class SimController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("/msgs")]
+    [HttpGet("/sim/msgs")]
     public async Task<ActionResult<List<Message>>> GetMessages()
     {
         var messages = await _messagesService.GetAsync();
@@ -45,7 +45,7 @@ public class SimController : ControllerBase
         return messages;
     }
 
-    [HttpGet("/msgs/{userID:length(24)}")]
+    [HttpGet("/sim/msgs/{userID:length(24)}")]
     public async Task<ActionResult<List<Message>>> GetMessagesFromUser(string userID)
     {
         var messages = await _messagesService.GetMessageFromUserIDAsync(userID);
@@ -58,7 +58,7 @@ public class SimController : ControllerBase
         return messages.ToList();
     }
 
-    [HttpPost("/msgs/{userID:length(24)}")]
+    [HttpPost("/sim/msgs/{userID:length(24)}")]
     public async Task<ActionResult> PostMessageAsUser(string userID, Message newMessage)
     {
         newMessage.Timestamp.ToLocalTime();
@@ -70,11 +70,11 @@ public class SimController : ControllerBase
 
     }
 
-    [HttpGet("/fllws/{userID:length(24)}")]
+    [HttpGet("/sim/fllws/{userID:length(24)}")]
     public async Task<ActionResult<List<string>>> GetFollowersFromUser(string userID) =>
         await _usersService.GetFollowersAsync(userID);
 
-    //[HttpGet("/fllws/{userID:length(24)}")]
+    //HttpPost("/fllws/{userID:length(24)}")]
 
     //public async Task<ActionResult> PostUserInFollowers(string userID) =>
         //await _usersService.PostFollowerAsync(userID);
