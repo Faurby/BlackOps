@@ -28,19 +28,19 @@ Vagrant.configure('2') do |config|
     
     # install docker and docker-compose
     config.vm.provision :docker
-    config.vm.provision :docker_compose
+    config.vm.provision :docker_compose, yml: "/vagrant/docker-compose.yml", run: "always"
         
 
     server.vm.provision "shell", inline: <<-SHELL
-        echo "running docker-compose up"
+        # echo "running docker-compose up"
         cp -r /vagrant/* $HOME
-        nohup docker-compose up > out.log &
+        # nohup docker-compose up > out.log &
         echo "================================================================="
         echo "=                            DONE                               ="
         echo "================================================================="
         echo "Navigate in your browser to:"
         THIS_IP=`hostname -I | cut -d" " -f1`
-        echo "http://${THIS_IP}:5000"
+        echo "http://${THIS_IP}:5142"
     SHELL
     end
 
