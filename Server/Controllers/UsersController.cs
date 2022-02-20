@@ -87,7 +87,7 @@ public class UsersController : ControllerBase
             return NotFound();
         }
 
-        await _usersService.RemoveAsync(user.Id);
+        await _usersService.RemoveAsync(user.Id!);
 
         return NoContent();
     }

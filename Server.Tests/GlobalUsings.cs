@@ -1,4 +1,5 @@
 global using Xunit;
+global using MiniTwit.Shared;
 global using Microsoft.Extensions.Options;
 global using MiniTwit.Server;
-global using MiniTwit.Server.UsersController;
+global using MongoDB.Driver;
