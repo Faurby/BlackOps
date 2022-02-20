@@ -1,9 +1,3 @@
-using System.Diagnostics;
-using BCrypt.Net;
-using Microsoft.Extensions.Options;
-using MiniTwit.Shared;
-using MongoDB.Driver;
-
 namespace MiniTwit.Server;
 
 public class UsersService : IUsersService
@@ -81,7 +75,6 @@ public class UsersService : IUsersService
     {
         var user = (await _usersCollection.Find(x => x.Id == whoID).FirstOrDefaultAsync());
         var userWhomToUnfollow = (await _usersCollection.Find(x => x.Id == whomID).FirstOrDefaultAsync());
-
 
         if (user != null)
         {

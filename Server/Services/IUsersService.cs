@@ -1,6 +1,3 @@
-using MiniTwit.Shared;
-
-namespace MiniTwit.Server;
 public interface IUsersService
 {
     Task<List<string>> GetFollowersAsync(string id);

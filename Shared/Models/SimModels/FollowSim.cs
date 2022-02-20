@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using MiniTwit.Shared;
 
-namespace MiniTwit.Server;
+namespace MiniTwit.Shared.SimModels;
 
 public class FollowSim
 {

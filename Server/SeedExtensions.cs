@@ -4,6 +4,7 @@ using MongoDB.Driver;
 
 namespace MyApp.Server;
 
+// DOES NOT WORK :(
 public static class SeedExtensions
 {
     private static IMongoCollection<User> _usersCollection;
