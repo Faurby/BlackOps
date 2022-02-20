@@ -5,27 +5,29 @@
 @inject IModalService modal
 @using MiniTwit.Shared
 
-<h1>Sign in</h1>
+<div class=signin-container>
+    <h1>Sign in</h1>
 
-<EditForm Model="@toBeLoggedInUser" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="form-group">
-        <label for="Username">Username</label>
-        <InputText id="Username" @bind-Value="toBeLoggedInUser.UserName" class="form-control" autocomplete="off" />
-    </div>
-    <div class="form-group">
-        <label for="Password">Password</label>
-        <InputText id="Password" type="password" @bind-Value="toBeLoggedInUser.Password" class="form-control"
-            autocomplete="off" />
-    </div>
-    <div class="form-group">
-        <br />
-        <button type="submit" class="btn btn-success">Sign in</button>
-        <button type="reset" class="btn btn-secondary">Reset</button>
-        @* <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button> *@
-    </div>
-</EditForm>
+    <EditForm Model="@toBeLoggedInUser" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label for="Username">Username</label>
+            <InputText id="Username" @bind-Value="toBeLoggedInUser.UserName" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <InputText id="Password" type="password" @bind-Value="toBeLoggedInUser.Password" class="form-control"
+                autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <br />
+            <button type="submit" class="btn btn-success">Sign in</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+            @* <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button> *@
+        </div>
+    </EditForm>
+</div>
 
 @code {
     // toBeLoggedInUser is used to store the temp information, before we actually try to sign in.

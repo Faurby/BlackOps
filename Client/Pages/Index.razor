@@ -1,42 +1,49 @@
 @page "/"
-@using MiniTwit.Client.Components
 @using MiniTwit.Shared
 @inject HttpClient Http
-@inject IModalService modal
+@inject Blazored.LocalStorage.ILocalStorageService localStore
+@using MiniTwit.Client.Helper;
 
-@* Base uri for the application Used as public timeline (showing all messages from all users) *@
 
 @* Base uri for the application Used as public timeline (showing all messages from all users) *@
 
 <PageTitle>MiniTwit</PageTitle>
 
 <div class=page>
-  <h1>Public Timeline</h1>
-  <button @onclick="() => CreatePost()">Create post</button>
+  <div class=top-sticker>
+    <h4>Public Timeline</h4>
+  </div>
+  
+  @if (signedIn){
+    <NewPostBox gravLink=@gravLink></NewPostBox>
+  }
   @if (messages != null)
   {
-    <ul>
-
       @foreach (var message in messages)
       {
         <MessageBox message="message"></MessageBox>
       }
-    </ul>
   }
 
 </div>
 
 @code {
   private Message[]? messages;
+  
+  
+  private bool signedIn;
+  private User? localUser;
+  private string gravLink;
 
   protected override async Task OnInitializedAsync()
   {
     // Get all messages through the API
     messages = await Http.GetFromJsonAsync<Message[]>("api/Messages");
-  }
-  private void CreatePost()
-    {
-      var parameters = new ModalParameters();
-      modal.Show<NewPostBox>("Create a new post", parameters);
+    
+    localUser = await localStore.GetItemAsync<User>("user");
+    if(localUser != null){
+      signedIn = true;
+      gravLink = await Gravatar.GenerateGravatarLink(Http,localUser.Id,64);
     }
+  }  
 }
