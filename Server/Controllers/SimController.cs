@@ -10,6 +10,8 @@ public class SimController : ControllerBase
     private readonly MessagesService _messagesService;
     private readonly UsersService _usersService;
 
+    private int _latest;
+
     public SimController(MessagesService messagesservice, UsersService usersService)
     {
         _messagesService = messagesservice;
@@ -17,40 +19,30 @@ public class SimController : ControllerBase
     }
 
     [HttpGet("/sim/latest")]
-    public async Task<ActionResult<Message>> GetLatestMsg()
+    public async Task<int> GetLatest()
     {
-        var messages = await _messagesService.GetAsync();
-
-        if (messages is null)
-        {
-            return NotFound();
-        }
-
-        Console.WriteLine("/sim/latest text: " + messages.FirstOrDefault().Text);
-
-        return messages.First();
+        return _latest;
     }
 
     [HttpPost("/sim/register")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterSim user)
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterSim user, [FromQuery(Name = "latest")] int? latestMessage)
     {
-        await _usersService.CreateAsync(user.ConvertToUser());
+        var status = await _usersService.CreateAsync(user.ConvertToUser());
 
-        Console.WriteLine("Trying to create user!");
-        Console.WriteLine("Created user: " + user.username);
+        await UpdateLatest(latestMessage);
 
-        return StatusCode(204, "");
+        if (status == Status.Created)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return BadRequest();
+        }
     }
 
     [HttpGet("/sim/msgs")]
-    public async Task<ActionResult<List<Message>>> GetMessages()
-    {
-        var messages = await _messagesService.GetAsync();
-
-        Console.WriteLine("Returned all messages");
-
-        return messages;
-    }
+    public async Task<ActionResult<List<Message>>> GetMessages() => await _messagesService.GetAsync();
 
     [HttpGet("/sim/msgs/{userID:length(24)}")]
     public async Task<ActionResult<List<Message>>> GetMessagesFromUser(string userID)
@@ -62,37 +54,85 @@ public class SimController : ControllerBase
             return NotFound();
         }
 
-        Console.WriteLine("Returned all messages of user: " + userID);
-
         return messages.ToList();
     }
 
-    [HttpPost("/sim/msgs/{userID:length(24)}")]
-    public async Task<ActionResult> PostMessageAsUser(string userID, Message newMessage)
+    [HttpPost("/sim/msgs/{username}")]
+    public async Task<ActionResult> PostMessageAsUser(string username, [FromBody] MessageSim newMessage, [FromQuery(Name = "latest")] int? latestMessage)
     {
-        newMessage.Timestamp.ToLocalTime();
-        newMessage.AuthorID = userID;
+        await UpdateLatest(latestMessage);
 
-        await _messagesService.CreateAsync(newMessage);
+        var status = await _messagesService.CreateAsync(await ConvertToMessage(newMessage, username));
 
-        Console.WriteLine("Posted message to user: " + userID + " msg: " + newMessage.Text);
-
-        return CreatedAtAction(null, new { id = newMessage.Id }, newMessage);
-
+        if (status == Status.Created)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return Unauthorized();
+        }
     }
 
-    [HttpGet("/sim/fllws/{userID:length(24)}")]
-    public async Task<ActionResult<List<string>>> GetFollowersFromUser(string userID)
+    [HttpPost("/sim/fllws/{username}")]
+    public async Task<ActionResult> FollowUser(
+        string username,
+        [FromQuery(Name = "latest")] int? latestMessage,
+        [FromBody] FollowSim followSim)
     {
-        Console.WriteLine("Returning followers for user: " + userID);
+        await UpdateLatest(latestMessage);
 
-        return await _usersService.GetFollowersAsync(userID);
+        string whoID = (await _usersService.GetUsernameAsync(username)).Id;
+
+        if (whoID == null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            // whoID exists in DB, wanna follow/unfollow whomID.
+            // Since we cant create 2 different HTTP Post endpoints,
+            // We must create a single one. Therefore we merge the 2 "DTO"'s into 1.
+            // Here we can check if unfollow is null, therefore follow must be set.
+
+            // Unfollow another user
+            if (followSim.unfollow != null)
+            {
+                var whomID = (await _usersService.GetUsernameAsync(followSim.unfollow)).Id;
+                await _usersService.Unfollow(whoID, whomID);
+            }
+            // Follow another user
+            else
+            {
+                var whomID = (await _usersService.GetUsernameAsync(followSim.follow)).Id;
+                await _usersService.Follow(whoID, whomID);
+            }
+            return NoContent();
+        }
     }
 
     //HttpPost("/fllws/{userID:length(24)}")]
 
     //public async Task<ActionResult> PostUserInFollowers(string userID) =>
-        //await _usersService.PostFollowerAsync(userID);
+    //await _usersService.PostFollowerAsync(userID);
 
+    public async Task<Message> ConvertToMessage(MessageSim newMessage, string username)
+    {
+        var message = new Message();
 
+        message.AuthorID = (await _usersService.GetUsernameAsync(username)).Id;
+        message.AuthorName = username;
+        message.Text = newMessage.content;
+        message.Timestamp = DateTime.Now;
+
+        return message;
+    }
+
+    public async Task UpdateLatest(int? latest)
+    {
+        if (latest != null)
+        {
+            _latest = (int)latest;
+        }
+    }
 }

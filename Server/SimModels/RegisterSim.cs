@@ -14,6 +14,9 @@ public class RegisterSim
     [JsonPropertyName("pwd")]
     public string password { get; set; }
 
+    [JsonPropertyName("latest")]
+    public int latest { get; set; }
+
     public User ConvertToUser()
     {
         return new User

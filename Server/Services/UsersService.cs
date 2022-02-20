@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using BCrypt.Net;
 using Microsoft.Extensions.Options;
 using MiniTwit.Shared;
@@ -9,21 +10,14 @@ public class UsersService
 {
     private readonly IMongoCollection<User> _usersCollection;
 
-    public UsersService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings)
+    public UsersService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings, IMongoDatabase mongoDatabase)
     {
-        var mongoClient = new MongoClient(
-            miniTwitDatabaseSettings.Value.ConnectionString);
-
-        var mongoDatabase = mongoClient.GetDatabase(
-            miniTwitDatabaseSettings.Value.DatabaseName);
-
-        _usersCollection = mongoDatabase.GetCollection<User>(
-            miniTwitDatabaseSettings.Value.UsersCollectionName);
+        _usersCollection = mongoDatabase.GetCollection<User>(miniTwitDatabaseSettings.Value.UsersCollectionName);
     }
 
     public async Task<List<string>> GetFollowersAsync(string id) =>
     (await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync()).Followers.ToList();
-      
+
     public async Task<List<User>> GetAsync() =>
         await _usersCollection.Find(_ => true).ToListAsync();
 
@@ -32,14 +26,28 @@ public class UsersService
 
     public async Task<User?> GetUsernameAsync(string username) =>
         await _usersCollection.Find(x => x.UserName == username).FirstOrDefaultAsync();
-    
+
     public async Task<string> GetSalt(string username) =>
         (await _usersCollection.Find(x => x.UserName == username).FirstOrDefaultAsync()).PasswordSalt!;
-    
+
     public async Task<User?> Signin(string username, string password) =>
         await _usersCollection.Find(x => x.UserName == username && x.Password == password).FirstOrDefaultAsync();
-    public async Task CreateAsync(User newUser) =>
-        await _usersCollection.InsertOneAsync(newUser);
+    public async Task<Status> CreateAsync(User newUser)
+    {
+        var user = await _usersCollection.Find(x => x.UserName == newUser.UserName).FirstOrDefaultAsync();
+
+        if (user != null)
+        {
+            return Status.BadRequest;
+        }
+        else
+        {
+            await _usersCollection.InsertOneAsync(newUser);
+            return Status.Created;
+        }
+
+
+    }
 
     public async Task UpdateAsync(string id, User updatedUser) =>
         await _usersCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);
@@ -57,7 +65,7 @@ public class UsersService
         {
             user.Follows!.Add(whomID);
             userWhomToFollow.Followers.Add(whoID);
-            
+
             await UpdateAsync(user.Id!, user);
             await UpdateAsync(userWhomToFollow.Id!, userWhomToFollow);
 
