@@ -1,10 +1,6 @@
-using Microsoft.Extensions.Options;
-using MiniTwit.Shared;
-using MongoDB.Driver;
-
 namespace MiniTwit.Server;
 
-public class MessagesService
+public class MessagesService : IMessagesService
 {
     private readonly IMongoCollection<Message> _messagesCollection;
     private readonly IMongoCollection<User> _usersCollection;

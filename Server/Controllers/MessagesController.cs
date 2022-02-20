@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using MiniTwit.Shared;
 
 namespace MiniTwit.Server;
 
@@ -58,7 +57,7 @@ public class MessagesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(Message newMessage)
     {
-        newMessage.Timestamp.ToLocalTime();
+        newMessage.Timestamp = DateTime.Now;
         await _messagesService.CreateAsync(newMessage);
 
         return CreatedAtAction(nameof(Get), new { id = newMessage.Id }, newMessage);
