@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
+using Newtonsoft.Json;
 
 namespace Server.Tests;
 
@@ -35,5 +36,28 @@ public class UsersControllerTests
 
         var actual = await controller.Get(); 
         Assert.Equal(expected, actual);
+    }
+    [Fact]
+    public async Task Get_given_existing_user_returns_user()
+    {
+        var expected = new User 
+        {
+            Id = "1", 
+            UserName = "test123", 
+            Password = "SomePassword", 
+            PasswordSalt = "", 
+            Email = "test.test@gmail.com", 
+            Follows = new HashSet<string>(), 
+            Followers = new HashSet<string>()
+        };
+
+        var repository = new Mock<IUsersService>();
+        
+        repository.Setup(s => s.GetAsync("1")).ReturnsAsync(expected);
+        var controller = new UsersController(repository.Object);   
+
+        var actual = await controller.Get("1");
+
+        Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual.Value));
     }
 }
