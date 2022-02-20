@@ -32,9 +32,7 @@ Vagrant.configure('2') do |config|
         
 
     server.vm.provision "shell", inline: <<-SHELL
-        # echo "running docker-compose up"
         cp -r /vagrant/* $HOME
-        # nohup docker-compose up > out.log &
         echo "================================================================="
         echo "=                            DONE                               ="
         echo "================================================================="
