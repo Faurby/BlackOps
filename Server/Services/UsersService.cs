@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace MiniTwit.Server;
 
-public class UsersService
+public class UsersService : IUsersService
 {
     private readonly IMongoCollection<User> _usersCollection;
 

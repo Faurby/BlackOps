@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
 
 namespace Server.Tests;
@@ -11,9 +13,6 @@ public class UsersControllerTests
     private readonly Mock<IMongoClient> _client;
     private readonly Mock<IMongoDatabase> _db;
 
-    private readonly UsersController _controller;
-
-    private readonly UsersService _repository;
 
     public UsersControllerTests()
     {
@@ -23,13 +22,18 @@ public class UsersControllerTests
         var settings = new MiniTwitDatabaseSettings() {ConnectionString = "mongodb://tes123", DatabaseName = "TestDB"};
         _options.Setup(s => s.Value).Returns(settings);
         _client.Setup(c => c.GetDatabase(_options.Object.Value.DatabaseName, null)).Returns(_db.Object);
-        _repository = new UsersService(_options.Object, _db.Object);
-        _controller = new UsersController(_repository);
+        
     }
 
     [Fact]
-    public void Get_returns_papers_from_collection()
+    public async Task Get_returns_papers_from_collectionAsync()
     {
-        
+        var expected = new List<User>();
+        var repository = new Mock<IUsersService>();
+        repository.Setup(s => s.GetAsync()).ReturnsAsync(expected);
+        var controller = new UsersController(repository.Object);
+
+        var actual = await controller.Get(); 
+        Assert.Equal(expected, actual);
     }
 }
