@@ -1,11 +1,15 @@
+using Moq;
+
 namespace Server.Tests;
 
 public class UsersControllerTests
 {
 
-    private readonly IMongoCollection<User> _usersCollection;
+    private readonly Mock<IMongoCollection<User>> _usersCollection;
     
-    private IOptions<MiniTwitDatabaseSettings> _options;
+    private readonly Mock<IOptions<MiniTwitDatabaseSettings>> _options;
+    private readonly Mock<IMongoClient> _client;
+    private readonly Mock<IMongoDatabase> _db;
 
     private readonly UsersController _controller;
 
@@ -13,15 +17,19 @@ public class UsersControllerTests
 
     public UsersControllerTests()
     {
-        //Does not work since we need to have the correct connectionString to actually retrieve the "repo" in usersService.
-      var options = new MiniTwitDatabaseSettings(){ConnectionString = "abc", DatabaseName = "testDB"};
-      _options = Options.Create(options);
-      _repository = new UsersService(_options);
+        _options = new Mock<IOptions<MiniTwitDatabaseSettings>>();
+        _client = new Mock<IMongoClient>();
+        _db = new Mock<IMongoDatabase>();
+        var settings = new MiniTwitDatabaseSettings() {ConnectionString = "mongodb://tes123", DatabaseName = "TestDB"};
+        _options.Setup(s => s.Value).Returns(settings);
+        _client.Setup(c => c.GetDatabase(_options.Object.Value.DatabaseName, null)).Returns(_db.Object);
+        _repository = new UsersService(_options.Object, _db.Object);
+        _controller = new UsersController(_repository);
     }
 
     [Fact]
     public void Get_returns_papers_from_collection()
     {
-        Assert.True(true);   
+        
     }
 }
