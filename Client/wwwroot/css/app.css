@@ -2,6 +2,7 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overscroll-behavior-y: none;
 }
 
 h1:focus {
@@ -19,7 +20,8 @@ a, .btn-link {
 }
 
 .content {
-    padding-top: 1.1rem;
+    /*padding-top: 1.1rem;*/
+    /*min-width: 300px;*/
 }
 
 .valid.modified:not([type=checkbox]) {

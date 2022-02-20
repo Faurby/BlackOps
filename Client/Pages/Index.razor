@@ -2,7 +2,7 @@
 @using MiniTwit.Shared
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStore
-@using Minitwit.Client.Helper;
+@using MiniTwit.Client.Helper;
 
 
 @* Base uri for the application Used as public timeline (showing all messages from all users) *@
@@ -10,9 +10,13 @@
 <PageTitle>MiniTwit</PageTitle>
 
 <div class=page>
-  <h3>Public Timeline</h3>
-  <NewPostBox gravLink=@gravLink></NewPostBox>
-
+  <div class=top-sticker>
+    <h4>Public Timeline</h4>
+  </div>
+  
+  @if (signedIn){
+    <NewPostBox gravLink=@gravLink></NewPostBox>
+  }
   @if (messages != null)
   {
       @foreach (var message in messages)

@@ -5,30 +5,33 @@
 @inject IModalService modal
 @using MiniTwit.Shared
 
-<h1>Create user</h1>
 
-<EditForm Model="@user" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="form-group">
-        <label for="Username">Username</label>
-        <InputText id="Username" @bind-Value="user.UserName" class="form-control" autocomplete="off" />
-    </div>
-    <div class="form-group">
-        <label for="Email">E-mail</label>
-        <InputText id="Email" @bind-Value="user.Email" class="form-control" />
-    </div> 
-    <div class="form-group">
-        <label for="Password">Password</label>
-        <InputText id="Password" type="password" @bind-Value="user.Password" class="form-control" autocomplete="off" />
-    </div>
-    <div class="form-group">
-        <br />
-        <button type="submit" class="btn btn-success">Create</button>
-        <button type="reset" class="btn btn-secondary">Reset</button>
-        @* <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button> *@
-    </div>
-</EditForm>
+<div class=signup-container>
+    <h1>Create user</h1>
+
+    <EditForm Model="@user" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label for="Username">Username</label>
+            <InputText id="Username" @bind-Value="user.UserName" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <label for="Email">E-mail</label>
+            <InputText id="Email" @bind-Value="user.Email" class="form-control" />
+        </div> 
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <InputText id="Password" type="password" @bind-Value="user.Password" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <br />
+            <button type="submit" class="btn btn-success">Create</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+            @* <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button> *@
+        </div>
+    </EditForm>
+</div>
 
 @code {
     private User user = new();

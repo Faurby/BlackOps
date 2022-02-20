@@ -1,0 +1,7 @@
+.top-sticker {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  height: 53px;
+  top: -0.5px;
+  position: sticky;
+}

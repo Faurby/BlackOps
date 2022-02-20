@@ -1,36 +1,46 @@
 @page "/user/{id}"
-@using MiniTwit.Client.Components
+@using MiniTwit.Client.Helper
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 
 
 @if (requestedUser != null)
 {
-    <h1>@requestedUser.UserName's page</h1>
+    <div class=user-container>
+        <div class=background style="background-color:@bgColor"></div>
+        <div class=user-container-top>
+            <div class=avatar-frame>
+                <img class=avatar src=@gravLink>
+            </div>
+            <div class=button-container>
+                @if (localUser.Follows.Contains(id))
+                {
+                    <button class=button @onclick="UnfollowUser">Unfollow</button>
+                }
+                else
+                {
+                    <button class=button @onclick="FollowUser">Follow</button>
+                }
+            </div>
+        </div>
+        <h3 class=username>@requestedUser.UserName</h3>
+        <p class=handle>@requestedUser.Email</p>
+    </div>
+
     @if (localUser != null)
     {
-        // If localUser already follows requestedUser, write unfollow and vice versa
-        if (localUser.Follows.Contains(id))
-        {
-            <button @onclick="UnfollowUser">Unfollow</button>
-        }
-        else
-        {
-            <button @onclick="FollowUser">Follow</button>
-        }
+        // If localUser calready follows requestedUser, write unfollow and vice versa
+        
 
     }
 
     // If requestedUser has messages, show them
     @if (messages != null)
     {
-        <ul>
-
-            @foreach (var message in messages)
-            {
-                <MessageBox message="message"></MessageBox>
-            }
-        </ul>
+        @foreach (var message in messages)
+        {
+            <MessageBox message="message"></MessageBox>
+        }
     }
 
 }
@@ -47,6 +57,8 @@ else
     private User? requestedUser;
     private Message[]? messages;
     private User? localUser;
+    private string bgColor;
+    private string gravLink;
 
     // Follow the user via posting a followDTO to UsersController (followDTO simply holds whoID & whomID)
     private async Task FollowUser()
@@ -90,5 +102,8 @@ else
         requestedUser = await Http.GetFromJsonAsync<User>("api/Users/" + id);
         messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/userID/" + id);
         localUser = await localStore.GetItemAsync<User>("user");
+        bgColor = Gravatar.GetColorFromEmail(requestedUser);
+        gravLink = await Gravatar.GenerateGravatarLink(Http,requestedUser.Id,128);
+
     }
 }
