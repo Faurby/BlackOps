@@ -1,22 +1,37 @@
 .messagebox {
-    margin: auto;
-    width: 50%;
-    border: 2px solid;
-    border-radius: 1em;
     padding: 1em;
     margin-bottom: 1em;
     transition: 0.3s;
+    border-bottom-color: #e7e7e7;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    display: flex;
+}
+
+.text-slice {
+    flex-grow: 1;
+    padding-left: 1em;
+}
+
+.username {
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.text {
+    font-weight: 400;
+    font-size: 15;
 }
 
 .messagebox:hover {
-    background-color: #e6e3e3;
+    background-color: #f1f1f1;
     cursor: pointer;
 }
 
 .timestamp {
     font-size: small;
-    color: grey;
-    margin-bottom: 0;
+    color: rgb(165, 165, 165);
+    margin-bottom: 0;   
 }
 
 .byline {
@@ -25,8 +40,4 @@
     align-items: center;
     margin-bottom: 0;
     gap: 1em;
-}
-
-img {
-    padding-bottom: 2em;
 }

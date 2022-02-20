@@ -5,50 +5,54 @@
 @inject IModalService modal
 @using MiniTwit.Shared
 
-<h1>Create user</h1>
 
-<EditForm Model="@user" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="form-group">
-        <label for="Username">Username</label>
-        <InputText id="Username" @bind-Value="user.UserName" class="form-control" autocomplete="off" />
-    </div>
-    <div class="form-group">
-        <label for="Email">E-mail</label>
-        <InputText id="Email" @bind-Value="user.Email" class="form-control" />
-    </div> 
-    <div class="form-group">
-        <label for="Password">Password</label>
-        <InputText id="Password" type="password" @bind-Value="user.Password" class="form-control" autocomplete="off" />
-    </div>
-    <div class="form-group">
-        <br />
-        <button type="submit" class="btn btn-success">Create</button>
-        <button type="reset" class="btn btn-secondary">Reset</button>
-        @* <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button> *@
-    </div>
-</EditForm>
+<div class=signup-container>
+    <h1>Create user</h1>
+
+    <EditForm Model="@user" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label for="Username">Username</label>
+            <InputText id="Username" @bind-Value="user.UserName" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <label for="Email">E-mail</label>
+            <InputText id="Email" @bind-Value="user.Email" class="form-control" />
+        </div> 
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <InputText id="Password" type="password" @bind-Value="user.Password" class="form-control" autocomplete="off" />
+        </div>
+        <div class="form-group">
+            <br />
+            <button type="submit" class="btn btn-success">Create</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+            @* <button type="button" class="btn btn-primary" @onclick="Cancel">Cancel</button> *@
+        </div>
+    </EditForm>
+</div>
 
 @code {
-    private User user = new();
+    private User user = new() ;
     private async Task HandleValidSubmit()
     {
-        // TODO: password hash somewhere around here.
 
+        if (CheckUserInput())
+        {
+            return;
+        }
+        
         // Checking Username availability
         var availabilityResponse = await Http.GetAsync("api/Users/username/" + user.UserName);
         if (availabilityResponse.IsSuccessStatusCode)
         {
-            // Add parameter for the modal. Parameter must match [Parameter] in razor component
-            var parameters = new ModalParameters();
-            parameters.Add(nameof(ErrorBox.message), "Username already in use!");
-            modal.Show<ErrorBox>("Error", parameters);
+            DisplayErrorBox("Username already exists!");
             return;
         }
-        
+
         // If success, create user in DB and navigate to index page (force reload).
-              
+
         var response = await Http.PostAsJsonAsync("api/Users", user);
 
         if (response.IsSuccessStatusCode)
@@ -64,8 +68,35 @@
         }
     }
 
-    // When signing up, we dont know the id of user, so we must update the localUser before moving on (and losing the variable)
-    private async Task UpdateLocalUser()
+    public bool CheckUserInput()
+    {
+        if (user.Email == null || user.Email.Trim().Length == 0)
+        {
+            DisplayErrorBox("Please fill out E-mail!");
+            return true;
+        } else if (user.UserName == null || user.UserName.Trim().Length == 0)
+        {
+            DisplayErrorBox("Please fill out Username!");
+            return true;
+        } else if (user.Password == null || user.Password.Trim().Length == 0)
+        {
+            DisplayErrorBox("Please fill out Password!");
+            return true;
+        } 
+        else
+        {
+            return false;
+        }
+    }
+
+    public void DisplayErrorBox(string msg)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(ErrorBox.message), msg);
+        modal.Show<ErrorBox>("Error", parameters);
+    }
+
+private async Task UpdateLocalUser()
     {
         await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<User>("api/Users/username/" + user.UserName));
     }

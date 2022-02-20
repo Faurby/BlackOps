@@ -3,26 +3,43 @@
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 
-
 <EditForm Model="@text" OnValidSubmit="@HandleValidSubmit">
-    <div class="form-group">
-        @if(text.Length > 280)
-        {
-            <label for="textarea">Please write less than 280 characters</label>
-        }
-        else
-        {
-            <label for="textarea">What is on your mind?</label>
-        }
-        <InputText id="textarea" @bind-Value="text" class="form-control" autocomplete="off" />
-    </div>
-    <div class="form-group">
-        <br />
-        <button type="submit" class="btn btn-success">Publish</button>
+    <div class=tweet-compose-container>
+        <div class=tweet-compose-upper>
+            <div class=tweet-compose-gravatar>
+                <img class="gravatar-img" src=@gravLink>
+            </div>
+            <div class=tweet-compose-compose>
+                
+                    <div class="form-group">
+                        @if(text.Length > 280)
+                        {
+                            <label for="textarea">Please write less than 280 characters</label>
+                        }
+                        @* else
+                        {
+                            <label for="textarea">What is on your mind?</label>
+                        } *@
+                        <InputTextArea id="textarea" @bind-Value="text" placeholder="What is on your mind?" class="compose-text-area" autocomplete="off" />
+                    </div>
+                    
+            </div>
+        </div>
+        <div class=tweet-compose-lower>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success button">Publish</button>
+            </div>
+        </div>
     </div>
 </EditForm>
+
+
+
 @code
 {
+
+    [Parameter]
+    public string? gravLink { get; set; }
     private string text = "";
     private User? localUser;
 

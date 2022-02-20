@@ -1,0 +1,76 @@
+.user-container {
+  margin-bottom: 20px;
+  padding-bottom: 40px;
+  border-bottom-color: #e7e7e7;
+  border-bottom-width: 1px;
+  border-bottom-style: so
+}
+
+
+.top-sticker {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  height: 53px;
+  top: -0.5px;
+  position: sticky;
+}
+
+
+.avatar-frame {
+  background-color: white;
+  position: relative;
+  top: -64px;
+  width: 138px;
+  height: 138px;
+  padding: 5px;
+  border-radius: 999999px;
+  margin-left: 1.5em;
+  margin-bottom: -60px;
+}
+
+.username {
+  font-weight: 700;
+  margin-bottom: 0;
+  margin-left: 20px;
+}
+
+.handle {
+  font-size: small;
+  color: rgb(165, 165, 165);
+  margin-bottom: 0;
+  margin-left: 20px;
+}
+
+.background {
+  height: 10em;
+  width: 100%;
+}
+
+.user-container-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-container {
+  margin: 16px;
+}
+
+.button { 
+  background-color: rgb(29, 155, 240);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 8px 28px;
+  min-width: 52px;
+  border-radius: 9999px;
+  font-family: TwitterChirp, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: rgb(255, 255, 255);
+  align-items: center;
+  width: 230px;
+  height: 50px;
+  border-style: none;
+  transition: all .2s ease-in-out;
+}
+.button:hover { 
+  background-color: rgb(26, 140, 216);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 10px 30px;
+}

@@ -1,42 +1,48 @@
 @page "/mytimeline"
-@inject Blazored.LocalStorage.ILocalStorageService localStore
+@using MiniTwit.Shared
 @inject HttpClient Http
-@inject IModalService modal
+@inject Blazored.LocalStorage.ILocalStorageService localStore
+@using MiniTwit.Client.Helper;
 
 
-@* Show all you're followings messages  *@
-
-
-@* Show all you're followings messages  *@
+@* Base uri for the application Used as public timeline (showing all messages from all users) *@
 
 <PageTitle>MiniTwit</PageTitle>
 
-<h1>My Timeline</h1>
-<button @onclick="() => CreatePost()">Create post</button>
-@if (messages != null)
-{
-    <ul>
-        @foreach (var message in messages)
-        {
-            <MessageBox message="message" ></MessageBox>
-        }
-    </ul>
-}
+<div class=page>
+  <div class=top-sticker>
+    <h4>My Timeline</h4>
+  </div>
+  
+  <NewPostBox gravLink=@gravLink></NewPostBox>
 
-@code
-{
+  @if (messages != null)
+  {
+      @foreach (var message in messages)
+      {
+        <MessageBox message="message"></MessageBox>
+      }
+  }
 
-    private User? localUser;
-    private Message[]? messages;
+</div>
 
-    protected override async Task OnInitializedAsync()
-    {
-        // Get the local users (signed in as) and get all followings messages
-        localUser = await localStore.GetItemAsync<User>("user");
-        messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/followingMessages/" + localUser!.Id);
+@code {
+  private Message[]? messages;
+  
+  
+  private bool signedIn;
+  private User? localUser;
+  private string gravLink;
+
+  protected override async Task OnInitializedAsync()
+  {
+    // Get all messages through the API    
+    localUser = await localStore.GetItemAsync<User>("user");
+    
+    if(localUser != null){
+        messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/followingMessages/" + localUser.Id);
+        signedIn = true;
+        gravLink = await Gravatar.GenerateGravatarLink(Http,localUser.Id,64);
     }
-    private async Task CreatePost()
-    {
-        modal.Show<NewPostBox>();
-    }
+  }  
 }
