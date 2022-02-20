@@ -3,6 +3,7 @@ using MiniTwit.Server;
 using Blazored.LocalStorage;
 using MyApp.Server;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,10 @@ builder.Services.Configure<MiniTwitDatabaseSettings>(builder.Configuration.GetSe
 builder.Services.AddSingleton<MessagesService>();
 builder.Services.AddSingleton<UsersService>();
 builder.Services.AddSingleton<Utility>();
+
+builder.Services.AddSingleton<IMongoDatabase>(s => 
+    new MongoClient(builder.Configuration.GetConnectionString("MongoDB")).GetDatabase("MiniTwit")
+);
 
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddControllersWithViews();
@@ -24,7 +29,17 @@ builder.Services.AddSwaggerGen(c =>
     c.UseInlineDefinitionsForEnums();
 });
 
+builder.WebHost.UseKestrel(options => 
+    {
+        options.Limits.MinRequestBodyDataRate = null;
+        options.Limits.MinResponseDataRate = null;
+        options.Limits.MaxRequestBodySize = null;
+
+    });
+
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
