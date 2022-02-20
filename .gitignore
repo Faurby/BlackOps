@@ -2,4 +2,4 @@ obj/
 bin/
 .fake
 .ionide
-MongoDB/
+db/

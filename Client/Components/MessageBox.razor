@@ -1,7 +1,5 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
-@using MiniTwit.Client.Helper;
-
 
 @*  Message box is used in Index and MyTimeline, as the "wall" or "feed" of messages from users. 
     It is a reusable template for displaying messages. *@
@@ -38,6 +36,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        gravLink = await GenerateGravatarLink(80);
+        gravLink = await Gravatar.GenerateGravatarLink(Http,message!.AuthorID,64);
     }
 }
