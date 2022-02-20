@@ -38,7 +38,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        gravLink = await Gravatar.GenerateGravatarLink(Http,message!.AuthorID,64);
-        Console.WriteLine("Gravlink is: " + gravLink);
+        gravLink = await GenerateGravatarLink(80);
     }
 }

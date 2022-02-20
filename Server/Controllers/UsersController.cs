@@ -53,11 +53,20 @@ public class UsersController : ControllerBase
         newUser.Password = hashedPassword;
         newUser.PasswordSalt = salt;
 
-        Console.WriteLine("plain password: " + plainPassword + "\nHashed password: " + hashedPassword + "\nSalt:" + salt  + "\n" + "\n");
+        Console.WriteLine("plain password: " + plainPassword + "\nHashed password: " + hashedPassword + "\nSalt:" + salt + "\n" + "\n");
 
-        await _usersService.CreateAsync(newUser);
+        var status = await _usersService.CreateAsync(newUser);
 
-        return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+        if (status == Status.Created)
+        {
+            return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+
+        }
+        else
+        {
+            return BadRequest();
+        }
+
     }
 
     [HttpPut("{id:length(24)}")]
@@ -98,7 +107,7 @@ public class UsersController : ControllerBase
         // Encrypt password to look for it in database
         string salt = await _usersService.GetSalt(username);
         string hashedPassword = PasswordEncryption.HashPassword(password, salt, 1000, 70);
-        Console.WriteLine("plain password: " + password + "\nHashed password: " + hashedPassword + "\nSalt:" + salt  + "\n" + "\n");
+        Console.WriteLine("plain password: " + password + "\nHashed password: " + hashedPassword + "\nSalt:" + salt + "\n" + "\n");
 
         var user = await _usersService.Signin(username, hashedPassword);
 

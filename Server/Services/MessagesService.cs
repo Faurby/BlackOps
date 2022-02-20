@@ -9,12 +9,9 @@ public class MessagesService
     private readonly IMongoCollection<Message> _messagesCollection;
     private readonly IMongoCollection<User> _usersCollection;
 
-    public MessagesService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings)
+    public MessagesService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings, IMongoDatabase mongoDatabase)
     {
-        var mongoClient = new MongoClient(
-            miniTwitDatabaseSettings.Value.ConnectionString);
-
-        var mongoDatabase = mongoClient.GetDatabase(miniTwitDatabaseSettings.Value.DatabaseName);
+        // var _mongoDatabase = mongoClient.GetDatabase(miniTwitDatabaseSettings.Value.DatabaseName);
 
         _messagesCollection = mongoDatabase.GetCollection<Message>(miniTwitDatabaseSettings.Value.MessagesCollectionName);
         _usersCollection = mongoDatabase.GetCollection<User>(miniTwitDatabaseSettings.Value.UsersCollectionName);
@@ -36,8 +33,11 @@ public class MessagesService
     public async Task<List<Message>?> GetMessageFromUserIDAsync(string userID) =>
         await _messagesCollection.Find(x => x.AuthorID == userID).ToListAsync();
 
-    public async Task CreateAsync(Message newMessage) =>
+    public async Task<Status> CreateAsync(Message newMessage)
+    {
         await _messagesCollection.InsertOneAsync(newMessage);
+        return Status.Created;
+    }
 
     public async Task UpdateAsync(string id, Message updatedMessage) =>
         await _messagesCollection.ReplaceOneAsync(x => x.Id == id, updatedMessage);
