@@ -13,24 +13,26 @@
   <div class=top-sticker>
     <h4>Public Timeline</h4>
   </div>
-  
-  @if (signedIn){
+
+  @if (signedIn)
+  {
     <NewPostBox gravLink=@gravLink></NewPostBox>
   }
   @if (messages != null)
   {
-      @foreach (var message in messages)
-      {
+    <div style="height:90vh; overflow-y:scroll">
+      <Virtualize Items="@messages" Context="message">
         <MessageBox message="message"></MessageBox>
-      }
+      </Virtualize>
+    </div>
   }
 
 </div>
 
 @code {
-  private Message[]? messages;
-  
-  
+  private List<Message>? messages;
+
+
   private bool signedIn;
   private User? localUser;
   private string gravLink;
@@ -38,12 +40,13 @@
   protected override async Task OnInitializedAsync()
   {
     // Get all messages through the API
-    messages = await Http.GetFromJsonAsync<Message[]>("api/Messages");
-    
+    messages = await Http.GetFromJsonAsync<List<Message>>("api/Messages");
+
     localUser = await localStore.GetItemAsync<User>("user");
-    if(localUser != null){
+    if (localUser != null)
+    {
       signedIn = true;
-      gravLink = await Gravatar.GenerateGravatarLink(Http,localUser.Id,64);
+      gravLink = await Gravatar.GenerateGravatarLink(Http, localUser.Id, 64);
     }
-  }  
+  }
 }
