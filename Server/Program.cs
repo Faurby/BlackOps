@@ -45,12 +45,31 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    new Thread(async () =>
+        {
+            Thread.Sleep(4000);
+
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync("http://localhost:5142/sim/latest");
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+        }).Start();
 }
 else
 {
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+
+    new Thread(async () =>
+        {
+            Thread.Sleep(4000);
+
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync("http://localhost:80/sim/latest");
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+        }).Start();
 }
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -69,15 +88,7 @@ app.MapFallbackToFile("index.html");
 // Creates new thread that inits the services for futures use. This is needed for the ReadTimeout bug on the
 // First request in the minitwit_simulator.py script (timeout is 300 ms and it takes a little longer to initialize and 
 // respond to the request)
-new Thread(async () =>
-{
-    Thread.Sleep(4000);
 
-    HttpClient client = new HttpClient();
-    HttpResponseMessage response = await client.GetAsync("http://localhost:5142/sim/latest");
-    response.EnsureSuccessStatusCode();
-    string responseBody = await response.Content.ReadAsStringAsync();
-}).Start();
 
 app.Run();
 
