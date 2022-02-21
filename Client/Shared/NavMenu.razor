@@ -1,7 +1,6 @@
 ﻿@inject Blazored.LocalStorage.ILocalStorageService localStore
 @inject IModalService modal
 @inject HttpClient Http
-@using MiniTwit.Client.Helper;
 
 
 <div class="nav-menu-container">
@@ -74,7 +73,7 @@
     private bool collapseNavMenu = true;
     private bool signedIn;
     private User? localUser;
-    private string gravLink;
+    private string? gravLink;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
     private void ToggleNavMenu()
@@ -89,7 +88,7 @@
         localUser = await localStore.GetItemAsync<User>("user");
         if(localUser != null){
             signedIn = true;
-            gravLink = await Gravatar.GenerateGravatarLink(Http,localUser.Id,64);
+            gravLink = await Gravatar.GenerateGravatarLink(Http, localUser.Id!, 64);
         }
     }
     private void CreatePost()

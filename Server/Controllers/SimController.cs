@@ -16,9 +16,9 @@ public class SimController : ControllerBase
     }
 
     [HttpGet("/sim/latest")]
-    public async Task<int> GetLatest()
+    public Task<int> GetLatest()
     {
-        return _latest;
+        return Task.FromResult(_latest);
     }
 
     [HttpPost("/sim/register")]
@@ -26,7 +26,7 @@ public class SimController : ControllerBase
     {
         var status = await _usersService.CreateAsync(user.ConvertToUser());
 
-        await UpdateLatest(latestMessage);
+        UpdateLatest(latestMessage);
 
         if (status == Status.Created)
         {
@@ -57,18 +57,25 @@ public class SimController : ControllerBase
     [HttpPost("/sim/msgs/{username}")]
     public async Task<ActionResult> PostMessageAsUser(string username, [FromBody] MessageSim newMessage, [FromQuery(Name = "latest")] int? latestMessage)
     {
-        await UpdateLatest(latestMessage);
+        UpdateLatest(latestMessage);
 
-        var status = await _messagesService.CreateAsync(await ConvertToMessage(newMessage, username));
+        var message = await ConvertToMessage(newMessage, username);
 
-        if (status == Status.Created)
+        if (message != null)
         {
-            return NoContent();
+            var status = await _messagesService.CreateAsync(message);
+
+            if (status == Status.Created)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
-        else
-        {
-            return Unauthorized();
-        }
+
+        return BadRequest();
     }
 
     [HttpPost("/sim/fllws/{username}")]
@@ -77,9 +84,9 @@ public class SimController : ControllerBase
         [FromQuery(Name = "latest")] int? latestMessage,
         [FromBody] FollowSim followSim)
     {
-        await UpdateLatest(latestMessage);
+        UpdateLatest(latestMessage);
 
-        string whoID = (await _usersService.GetUsernameAsync(username)).Id;
+        string? whoID = (await _usersService.GetUsernameAsync(username))?.Id;
 
         if (whoID == null)
         {
@@ -95,14 +102,31 @@ public class SimController : ControllerBase
             // Unfollow another user
             if (followSim.unfollow != null)
             {
-                var whomID = (await _usersService.GetUsernameAsync(followSim.unfollow)).Id;
-                await _usersService.Unfollow(whoID, whomID);
+                var whomID = (await _usersService.GetUsernameAsync(followSim.unfollow))?.Id;
+
+                // TODO: Can this be done smarter? less duplication
+                if (whomID != null)
+                {
+                    await _usersService.Unfollow(whoID, whomID);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             // Follow another user
             else
             {
-                var whomID = (await _usersService.GetUsernameAsync(followSim.follow)).Id;
-                await _usersService.Follow(whoID, whomID);
+                var whomID = (await _usersService.GetUsernameAsync(followSim.follow!))?.Id;
+
+                if (whomID != null)
+                {
+                    await _usersService.Follow(whoID, whomID);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             return NoContent();
         }
@@ -113,19 +137,24 @@ public class SimController : ControllerBase
     //public async Task<ActionResult> PostUserInFollowers(string userID) =>
     //await _usersService.PostFollowerAsync(userID);
 
-    public async Task<Message> ConvertToMessage(MessageSim newMessage, string username)
+    public async Task<Message?> ConvertToMessage(MessageSim newMessage, string username)
     {
         var message = new Message();
 
-        message.AuthorID = (await _usersService.GetUsernameAsync(username)).Id;
-        message.AuthorName = username;
-        message.Text = newMessage.content;
-        message.Timestamp = DateTime.Now;
+        var authorID = (await _usersService.GetUsernameAsync(username))?.Id;
 
-        return message;
+        if (authorID != null && newMessage.content != null)
+        {
+            message.AuthorID = authorID;
+            message.AuthorName = username;
+            message.Text = newMessage.content;
+            message.Timestamp = DateTime.Now;
+            return message;
+        }
+        return null;
     }
 
-    public async Task UpdateLatest(int? latest)
+    public void UpdateLatest(int? latest)
     {
         if (latest != null)
         {

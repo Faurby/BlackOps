@@ -7,15 +7,15 @@ namespace MyApp.Server;
 // DOES NOT WORK :(
 public static class SeedExtensions
 {
-    private static IMongoCollection<User> _usersCollection;
-    private static IMongoCollection<Message> _messagesCollection;
-    private static IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings;
+    private static IMongoCollection<User>? _usersCollection;
+    private static IMongoCollection<Message>? _messagesCollection;
+    private static IOptions<MiniTwitDatabaseSettings>? miniTwitDatabaseSettings;
 
     public static IHost Seed(this IHost host)
     {
         using (var scope = host.Services.CreateScope())
         {
-            var mongoClient = new MongoClient(miniTwitDatabaseSettings.Value.ConnectionString);
+            var mongoClient = new MongoClient(miniTwitDatabaseSettings!.Value.ConnectionString);
 
             var mongoDatabase = mongoClient.GetDatabase(miniTwitDatabaseSettings.Value.DatabaseName);
 
@@ -57,7 +57,7 @@ public static class SeedExtensions
 
         foreach (var user in GetUsers())
         {
-            messageList.Add(new Message { AuthorID = user.Id, AuthorName = user.UserName, Text = GenerateText()});
+            messageList.Add(new Message { AuthorID = user.Id!, AuthorName = user.UserName, Text = GenerateText()});
         }
         return messageList;
     }

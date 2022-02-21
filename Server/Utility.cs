@@ -5,7 +5,7 @@ namespace MiniTwit.Server;
 
 public class Utility
 {
-    public async Task<UtilityDTO> MD5(string s)
+    public Task<UtilityDTO> MD5(string s)
     {
         var u = new UtilityDTO();
         using var provider = System.Security.Cryptography.MD5.Create();
@@ -15,6 +15,6 @@ public class Utility
             builder.Append(b.ToString("x2").ToLower());
 
         u.hash = builder.ToString();
-        return u;
+        return Task.FromResult(u);
     }
 }

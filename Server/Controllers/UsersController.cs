@@ -117,33 +117,41 @@ public class UsersController : ControllerBase
     [HttpPost("follow")]
     public async Task<IActionResult> Follow(FollowDTO followDTO)
     {
-        var status = await _usersService.Follow(followDTO.WhoID, followDTO.WhomID);
-
-        switch (status)
+        if (followDTO.WhoID != null && followDTO.WhomID != null)
         {
-            case Status.Success:
-                return Ok();
-            case Status.NotFound:
-                return NotFound();
-            default:
-                return Conflict();
+            var status = await _usersService.Follow(followDTO.WhoID, followDTO.WhomID);
+
+            switch (status)
+            {
+                case Status.Success:
+                    return Ok();
+                case Status.NotFound:
+                    return NotFound();
+                default:
+                    return Conflict();
+            }
         }
+        return BadRequest();
     }
 
     [HttpPost("unfollow")]
     public async Task<IActionResult> Unfollow(FollowDTO followDTO)
     {
-        var status = await _usersService.Unfollow(followDTO.WhoID, followDTO.WhomID);
-
-        switch (status)
+        if (followDTO.WhoID != null && followDTO.WhomID != null)
         {
-            case Status.Success:
-                return Ok();
-            case Status.NotFound:
-                return NotFound();
-            default:
-                return Conflict();
+            var status = await _usersService.Unfollow(followDTO.WhoID, followDTO.WhomID);
+
+            switch (status)
+            {
+                case Status.Success:
+                    return Ok();
+                case Status.NotFound:
+                    return NotFound();
+                default:
+                    return Conflict();
+            }
         }
+        return BadRequest();
     }
 }
 

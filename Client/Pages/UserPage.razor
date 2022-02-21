@@ -1,5 +1,4 @@
 @page "/user/{id}"
-@using MiniTwit.Client.Helper
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 
@@ -13,13 +12,16 @@
                 <img class=avatar src=@gravLink>
             </div>
             <div class=button-container>
-                @if (localUser.Follows.Contains(id))
+                @if (localUser != null)
                 {
-                    <button class=button @onclick="UnfollowUser">Unfollow</button>
-                }
-                else
-                {
-                    <button class=button @onclick="FollowUser">Follow</button>
+                    @if (localUser.Follows.Contains(id))
+                    {
+                        <button class=button @onclick="UnfollowUser">Unfollow</button>
+                    }
+                    else
+                    {
+                        <button class=button @onclick="FollowUser">Follow</button>
+                    }
                 }
             </div>
         </div>
@@ -45,13 +47,12 @@ else
 @code
 {
     [Parameter]
-    public string id { get; set; }
-
+    public string id { get; set; } = null!;
     private User? requestedUser;
     private Message[]? messages;
     private User? localUser;
-    private string bgColor;
-    private string gravLink;
+    private string? bgColor;
+    private string? gravLink;
 
     // Follow the user via posting a followDTO to UsersController (followDTO simply holds whoID & whomID)
     private async Task FollowUser()
@@ -64,7 +65,6 @@ else
             // Update the localUser and call StateHasChanged(). StateHasChanged() makes blazor look at all variables used in
             // code and updates components if necessary.
             await UpdateLocalUser();
-
             StateHasChanged();
         }
     }
@@ -77,15 +77,13 @@ else
         if (response.IsSuccessStatusCode)
         {
             await UpdateLocalUser();
-
             StateHasChanged();
-
         }
     }
 
     private async Task UpdateLocalUser()
     {
-        await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<User>("api/Users/" + localUser.Id));
+        await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<User>("api/Users/" + localUser!.Id!));
         localUser = await localStore.GetItemAsync<User>("user");
     }
 
@@ -95,8 +93,11 @@ else
         requestedUser = await Http.GetFromJsonAsync<User>("api/Users/" + id);
         messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/userID/" + id);
         localUser = await localStore.GetItemAsync<User>("user");
-        bgColor = Gravatar.GetColorFromEmail(requestedUser);
-        gravLink = await Gravatar.GenerateGravatarLink(Http,requestedUser.Id,128);
 
+        if (localUser != null && requestedUser != null)
+        {
+            bgColor = Gravatar.GetColorFromEmail(requestedUser);
+            gravLink = await Gravatar.GenerateGravatarLink(Http, requestedUser.Id!, 128);
+        }
     }
 }
