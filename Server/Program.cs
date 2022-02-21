@@ -14,7 +14,7 @@ builder.Services.AddSingleton<IMessagesService, MessagesService>();
 builder.Services.AddSingleton<IUsersService, UsersService>();
 builder.Services.AddSingleton<Utility>();
 
-builder.Services.AddSingleton<IMongoDatabase>(s => 
+builder.Services.AddSingleton<IMongoDatabase>(s =>
     new MongoClient(builder.Configuration.GetConnectionString("MongoDB")).GetDatabase("MiniTwit")
 );
 
@@ -29,7 +29,7 @@ builder.Services.AddSwaggerGen(c =>
     c.UseInlineDefinitionsForEnums();
 });
 
-builder.WebHost.UseKestrel(options => 
+builder.WebHost.UseKestrel(options =>
     {
         options.Limits.MinRequestBodyDataRate = null;
         options.Limits.MinResponseDataRate = null;
@@ -66,4 +66,18 @@ app.MapFallbackToFile("index.html");
 
 // app.Seed();
 
+// Creates new thread that inits the services for futures use. This is needed for the ReadTimeout bug on the
+// First request in the minitwit_simulator.py script (timeout is 300 ms and it takes a little longer to initialize and 
+// respond to the request)
+new Thread(async () =>
+{
+    Thread.Sleep(4000);
+
+    HttpClient client = new HttpClient();
+    HttpResponseMessage response = await client.GetAsync("http://localhost:5142/sim/latest");
+    response.EnsureSuccessStatusCode();
+    string responseBody = await response.Content.ReadAsStringAsync();
+}).Start();
+
 app.Run();
+
