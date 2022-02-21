@@ -10,8 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.Configure<MiniTwitDatabaseSettings>(builder.Configuration.GetSection("MiniTwitDatabase"));
 
-builder.Services.AddSingleton<MessagesService>();
-builder.Services.AddSingleton<UsersService>();
+builder.Services.AddSingleton<IMessagesService, MessagesService>();
+builder.Services.AddSingleton<IUsersService, UsersService>();
 builder.Services.AddSingleton<Utility>();
 
 builder.Services.AddSingleton<IMongoDatabase>(s => 

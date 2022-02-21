@@ -6,9 +6,9 @@ namespace MiniTwit.Server;
 [Route("api/[controller]")]
 public class MessagesController : ControllerBase
 {
-    private readonly MessagesService _messagesService;
+    private readonly IMessagesService _messagesService;
 
-    public MessagesController(MessagesService messagesService) =>
+    public MessagesController(IMessagesService messagesService) =>
         _messagesService = messagesService;
 
     [HttpGet]
@@ -58,9 +58,17 @@ public class MessagesController : ControllerBase
     public async Task<IActionResult> Post(Message newMessage)
     {
         newMessage.Timestamp = DateTime.Now;
-        await _messagesService.CreateAsync(newMessage);
+        var status = await _messagesService.CreateAsync(newMessage);
 
-        return CreatedAtAction(nameof(Get), new { id = newMessage.Id }, newMessage);
+        if (status == Status.Created)
+        {
+            return CreatedAtAction(nameof(Get), new { id = newMessage.Id }, newMessage);
+
+        }
+        else
+        {
+            return BadRequest();
+        }
     }
 
     [HttpPut("{id:length(24)}")]
