@@ -43,6 +43,7 @@
     messages = await Http.GetFromJsonAsync<List<Message>>("api/Messages");
 
     localUser = await localStore.GetItemAsync<User>("user");
+      
     if (localUser != null)
     {
       signedIn = true;

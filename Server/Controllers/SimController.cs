@@ -4,12 +4,12 @@ namespace MiniTwit.Server;
 [Route("sim/[controller]")]
 public class SimController : ControllerBase
 {
-    private readonly MessagesService _messagesService;
-    private readonly UsersService _usersService;
+    private readonly IMessagesService _messagesService;
+    private readonly IUsersService _usersService;
 
     private int _latest;
 
-    public SimController(MessagesService messagesservice, UsersService usersService)
+    public SimController(IMessagesService messagesservice, IUsersService usersService)
     {
         _messagesService = messagesservice;
         _usersService = usersService;
