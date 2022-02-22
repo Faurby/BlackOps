@@ -3,3 +3,4 @@ bin/
 .fake
 .ionide
 db/
+MongoDB/
