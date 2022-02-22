@@ -17,7 +17,7 @@ Vagrant.configure('2') do |config|
         provider.token = ENV["DIGITAL_OCEAN_TOKEN"]
         provider.image = 'ubuntu-20-04-x64'
         provider.region = 'fra1'
-        provider.size = 's-1vcpu-1gb'
+        provider.size = 's-2vcpu-2gb'
         provider.privatenetworking = true
       end
       
