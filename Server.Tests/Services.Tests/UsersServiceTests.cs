@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using Mongo2Go;
 using Moq;
 
@@ -18,7 +19,7 @@ public class UsersServiceTests
         var database = client.GetDatabase("MiniTwit");
         _collection = database.GetCollection<User>("Users");
 
-        var moqOptions = new MiniTwitDatabaseSettings() {UsersCollectionName = "Users"};
+        var moqOptions = new MiniTwitDatabaseSettings() { UsersCollectionName = "Users" };
         IOptions<MiniTwitDatabaseSettings> options = Options.Create<MiniTwitDatabaseSettings>(moqOptions);
 
         _usersService = new UsersService(options, database);
@@ -29,6 +30,7 @@ public class UsersServiceTests
             Password = "u1bwRX5aC5IvhSBksPjBwnEwmrEZ6jTWbJmO7ZtV1OSjqz0yv1OHKD0FJQeXpwM6H00dFGvykDVeQkjdcMm6Tu",
             PasswordSalt = "9PP9fEheyvtIkayhIPZ1eAcEdY/CeR7+UycrMK4IXn+jnpPfEA/OydP5isl2sCewF2rRTmmU1eeS77ujlcJIWiX0MZB1Ew==",
             Email = "anlf@itu.dk",
+            Follows = new HashSet<string>() { "123456789123456789123456" }
         };
 
         _collection.InsertOne(user1);
@@ -44,6 +46,8 @@ public class UsersServiceTests
             Password = "u1bwRX5aC5IvhSBksPjBwnEwmrEZ6jTWbJmO7ZtV1OSjqz0yv1OHKD0FJQeXpwM6H00dFGvykDVeQkjdcMm6Tu",
             PasswordSalt = "9PP9fEheyvtIkayhIPZ1eAcEdY/CeR7+UycrMK4IXn+jnpPfEA/OydP5isl2sCewF2rRTmmU1eeS77ujlcJIWiX0MZB1Ew==",
             Email = "anlf@itu.dk",
+            Follows = new HashSet<string>() { "123456789123456789123456" }
+
         };
 
         var expected = new List<User>() { user1 };
@@ -58,9 +62,38 @@ public class UsersServiceTests
     {
         for (int i = 0; i < expected.Count; i++)
         {
-            Assert.Equal(expected.ElementAt(i).Email, actual.ElementAt(i).Email);
-            Assert.Equal(expected.ElementAt(i).UserName, actual.ElementAt(i).UserName);
-            Assert.Equal(expected.ElementAt(i).Password, actual.ElementAt(i).Password);
+            await AssertTwoUsersIgnoreId(expected.ElementAt(i), actual.ElementAt(i));
+        }
+    }
+
+    public async Task AssertTwoUsersIgnoreId(User expected, User actual)
+    {
+        Assert.Equal(expected.UserName, actual.UserName);
+        Assert.Equal(expected.Email, actual.Email);
+        Assert.Equal(expected.Password, actual.Password);
+        Assert.Equal(expected.PasswordSalt, actual.PasswordSalt);
+
+        if (!expected.Followers.IsNullOrEmpty() && !actual.Followers.IsNullOrEmpty())
+        {
+            for (int i = 0; i < expected.Follows.Count; i++)
+            {
+
+                var expectedFollowers = expected.Followers.ElementAt(i);
+                var actualFollowers = actual.Followers.Where(s => s == expectedFollowers).FirstOrDefault();
+
+                Assert.Equal(expectedFollowers, actualFollowers);
+            }
+        }
+
+        if (!expected.Follows.IsNullOrEmpty() && !actual.Follows.IsNullOrEmpty())
+        {
+            for (int i = 0; i < expected.Followers.Count; i++)
+            {
+                var expectedFollows = expected.Follows.ElementAt(i);
+                var actualFollows = actual.Follows.Where(s => s == expectedFollows).FirstOrDefault();
+
+                Assert.Equal(expectedFollows, actualFollows);
+            }
         }
     }
 }
