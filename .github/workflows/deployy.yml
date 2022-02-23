@@ -26,7 +26,9 @@ jobs:
       - name: configure deployment stuff
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY}}
-          known_hosts: ssh-keyscan -H ${{ secrets.SSH_HOST }}
+          known_hosts: 'placeholder'
+      - name: make known_hosts
+        run: ssh-keyscan -h ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       
       # deploy
       - name: Deploy to production
