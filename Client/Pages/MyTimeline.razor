@@ -1,9 +1,6 @@
 @page "/mytimeline"
-@using MiniTwit.Shared
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStore
-@using MiniTwit.Client.Helper;
-
 
 @* Base uri for the application Used as public timeline (showing all messages from all users) *@
 
@@ -28,11 +25,8 @@
 
 @code {
   private Message[]? messages;
-  
-  
-  private bool signedIn;
   private User? localUser;
-  private string gravLink;
+  private string? gravLink;
 
   protected override async Task OnInitializedAsync()
   {
@@ -41,8 +35,7 @@
     
     if(localUser != null){
         messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/followingMessages/" + localUser.Id);
-        signedIn = true;
-        gravLink = await Gravatar.GenerateGravatarLink(Http,localUser.Id,64);
+        gravLink = await Gravatar.GenerateGravatarLink(Http,localUser.Id!,64);
     }
   }  
 }

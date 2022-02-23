@@ -6,13 +6,13 @@ namespace MiniTwit.Shared.SimModels;
 public class RegisterSim
 {
     [JsonPropertyName("username")]
-    public string username { get; set; }
+    public string? username { get; set; }
 
     [JsonPropertyName("email")]
-    public string email { get; set; }
+    public string? email { get; set; }
 
     [JsonPropertyName("pwd")]
-    public string password { get; set; }
+    public string? password { get; set; }
 
     [JsonPropertyName("latest")]
     public int latest { get; set; }
@@ -21,9 +21,9 @@ public class RegisterSim
     {
         return new User
         {
-            Email = email,
-            UserName = username,
-            Password = password
+            Email = email!,
+            UserName = username!,
+            Password = password!
         };
     }
 }

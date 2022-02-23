@@ -11,8 +11,7 @@ public class MessagesController : ControllerBase
     public MessagesController(IMessagesService messagesService) => _messagesService = messagesService;
 
     [HttpGet]
-    public async Task<List<Message>> Get() =>
-        await _messagesService.GetAsync();
+    public async Task<List<Message>> Get() => await _messagesService.GetAsync();
 
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Message>> Get(string id)
@@ -24,7 +23,7 @@ public class MessagesController : ControllerBase
             return NotFound();
         }
 
-        return message;
+        return Ok(message);
     }
 
     [HttpGet("followingMessages/{userID}")]
@@ -37,7 +36,7 @@ public class MessagesController : ControllerBase
             return NotFound();
         }
 
-        return messages;
+        return Ok(messages);
     }
 
     [HttpGet("userID/{userID:length(24)}")]
@@ -50,7 +49,7 @@ public class MessagesController : ControllerBase
             return NotFound();
         }
 
-        return message;
+        return Ok(message);
     }
 
     [HttpPost]

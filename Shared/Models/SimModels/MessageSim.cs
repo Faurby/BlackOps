@@ -6,6 +6,6 @@ namespace MiniTwit.Shared.SimModels;
 public class MessageSim
 {
     [JsonPropertyName("content")]
-    public string content { get; set; }
+    public string? content { get; set; }
 
 }

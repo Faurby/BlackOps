@@ -3,3 +3,5 @@ bin/
 .fake
 .ionide
 db/
+MongoDB/
+.vagrant/
