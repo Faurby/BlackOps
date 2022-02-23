@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   db:
-    image: mongo:5.0
+    image: faurby/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=f88fa811-92c6-47b5-885b-15769f06fda3
@@ -11,7 +11,7 @@ services:
       - 28017:28017
     container_name: db
   webserver:
-    image: webserver
+    image: faurby/webserver
     build:
       context: .
       dockerfile: ./Dockerfile
