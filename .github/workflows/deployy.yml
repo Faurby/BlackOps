@@ -15,8 +15,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: build and push docker images
-        # run: ./docker.sh
-        run: pwd
+        run: ./docker.sh
       - name: Deploy to production
         uses: fifsky/ssh-action@master
         with:
