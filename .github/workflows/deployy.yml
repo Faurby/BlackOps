@@ -20,6 +20,7 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
+          user: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           command: |
             docker-compose pull
