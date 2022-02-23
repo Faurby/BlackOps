@@ -19,6 +19,13 @@ jobs:
       # Build and push docker images to the hub
       - name: build and push docker images
         run: ./docker.sh
+      # Some weird SSH shit
+      - name: configure deployment stuff
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY}}
+          known_hosts: 'placeholder'
+      - name: make known_hosts
+        run: ssh-keyscan -h ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       # deploy
       - name: Deploy to production
         uses: fifsky/ssh-action@master
