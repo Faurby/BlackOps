@@ -1,4 +1,4 @@
-#!usr/bin/env bash
+#!/bin/bash
 
 echo "Building images for MiniTwit"
 docker build -t faurby/webserver -f Dockerfile-webserver .
