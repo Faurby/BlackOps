@@ -7,7 +7,7 @@ public class Gravatar {
         var user = await http.GetFromJsonAsync<User>("api/Users/" + UserID!);
         var utilityDTO = await http.GetFromJsonAsync<UtilityDTO>("api/Utility/md5/" + user!.Email.Trim());
 
-        return "https://www.gravatar.com/avatar/" + utilityDTO.hash + "?d=identicon&s=" + size;
+        return "https://www.gravatar.com/avatar/" + utilityDTO!.hash + "?d=identicon&s=" + size;
     }
 
     public static string GetColorFromEmail(User user) {

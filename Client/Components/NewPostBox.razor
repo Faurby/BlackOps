@@ -46,7 +46,7 @@
     private async Task HandleValidSubmit()
     {
         localUser = await localStore.GetItemAsync<User>("user");
-        var message = new Message {AuthorID = localUser.Id, AuthorName = localUser.UserName, Text = text};
+        var message = new Message {AuthorID = localUser.Id!, AuthorName = localUser.UserName, Text = text};
         var response = await Http.PostAsJsonAsync("api/Messages", message);
         if (response.IsSuccessStatusCode)
         {
