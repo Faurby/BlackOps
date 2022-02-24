@@ -12,11 +12,12 @@ services:
       - 27017:27017
       - 28017:28017
     container_name: db
+    
   webserver:
     image: faurby/webserver
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile-webserver
     environment:
         ASPNETCORE_ENVIRONMENT: Production
     ports:
@@ -25,3 +26,5 @@ services:
     container_name: webserver
     depends_on:
       - db
+# volumes:
+#   mongodb:
