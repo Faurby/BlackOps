@@ -20,9 +20,16 @@ jobs:
         
       - name: 'Get Previous tag'
         id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-        with:
-          fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+        run: | 
+          git fetch -t 
+          TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          if [ -z "$TAG" ] 
+          then 
+            exit 1
+          else 
+            echo "Tag Found: $TAG"
+            echo ::set-output name=tag::$TAG
+          fi
           
       - name: 'Get next minor version'
         id: semvers
