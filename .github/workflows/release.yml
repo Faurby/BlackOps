@@ -1,8 +1,12 @@
 on:
+  push:
+    branches:
+      - main
   schedule: 
-    - cron: "0 19 * * 0"
+    - cron: "*/5 * * * *"
+  
 
-name: Create Release
+name: Create Major Release
 
 jobs:
   release:
@@ -11,17 +15,39 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Create Release
-        id: create_release
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+      - name: 'Get next minor version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
+        with:
+          version: ${{ steps.previoustag.outputs.tag }}
+      - name: Create Minor Release
+        if: ${{ github.event_name == 'push'}}
+        id: create_minor_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+        with: 
+          tag_name: ${{ steps.semvers.outputs.minor }}
+          release_name: Release ${{ steps.semvers.outputs.minor }}
           body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+            Minor release
+          draft: false
+          prerelease: false
+      - name: Create Major Release
+        if: ${{ github.event_name == 'schedule'}}
+        id: create_major_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with: 
+          tag_name: ${{ steps.semvers.outputs.major }}
+          release_name: Release ${{ steps.semvers.outputs.major }}
+          body: |
+            Major release
           draft: false
           prerelease: false
