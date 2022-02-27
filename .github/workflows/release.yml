@@ -6,7 +6,7 @@ on:
     - cron: "*/5 * * * *"
   
 
-name: Create Major Release
+name: Create Release
 
 jobs:
   release:
@@ -25,6 +25,11 @@ jobs:
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
           version: ${{ steps.previoustag.outputs.tag }}
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Minor Release
         if: ${{ github.event_name == 'push'}}
         id: create_minor_release
@@ -36,6 +41,7 @@ jobs:
           release_name: Release ${{ steps.semvers.outputs.minor }}
           body: |
             Minor release
+            ${{steps.github_release.outputs.changelog}}
           draft: false
           prerelease: false
       - name: Create Major Release
@@ -49,5 +55,6 @@ jobs:
           release_name: Release ${{ steps.semvers.outputs.major }}
           body: |
             Major release
+            ${{steps.github_release.outputs.changelog}}
           draft: false
           prerelease: false
