@@ -1,4 +1,4 @@
-name: build docker containers and deploy to VM on push to main
+name: Deploy changes
 
 on:
   push:
