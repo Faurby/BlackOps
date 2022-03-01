@@ -16,12 +16,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
+          fetch-depth: 0 # Required due to the way Git works. Without it, tags cannot be found
         
       - name: 'Get Previous tag'
         id: previoustag
         run: | 
-          git fetch -t 
+          git fetch -t -f 
           TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
           if [ -z "$TAG" ] 
           then 
@@ -31,15 +31,15 @@ jobs:
             echo ::set-output name=tag::$TAG
           fi
           
-      - name: 'Get next minor version'
+      - name: 'Get next version'
         id: semvers
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
           version: ${{ steps.previoustag.outputs.tag }}
           
       - name: "Build Changelog"
-        id: github_release
-        uses: mikepenz/release-changelog-builder-action@v2
+        id: Changelog
+        uses: scottbrenner/generate-changelog-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
@@ -54,7 +54,7 @@ jobs:
           release_name: Release ${{ steps.semvers.outputs.minor }}
           body: |
             Minor release
-            ${{steps.github_release.outputs.changelog}}
+            ${{steps.Changelog.outputs.changelog}}
           draft: false
           prerelease: false
           
@@ -69,6 +69,6 @@ jobs:
           release_name: Release ${{ steps.semvers.outputs.major }}
           body: |
             Major release
-            ${{steps.github_release.outputs.changelog}}
+            ${{steps.Changelog.outputs.changelog}}
           draft: false
           prerelease: false
