@@ -6,19 +6,25 @@ public class SimController : ControllerBase
 {
     private readonly IMessagesService _messagesService;
     private readonly IUsersService _usersService;
+    private readonly ILatestService _latestService;
 
-    private int _latest = -1;
-
-    public SimController(IMessagesService messagesservice, IUsersService usersService)
+    public SimController(IMessagesService messagesservice, IUsersService usersService, ILatestService latestService)
     {
         _messagesService = messagesservice;
         _usersService = usersService;
+        _latestService = latestService;
     }
 
     [HttpGet("/sim/latest")]
-    public ActionResult<LatestDTO> GetLatest()
+    public async Task<ActionResult<LatestDTO>> GetLatest()
     {
-        return new LatestDTO() {latest = _latest};
+        var latestFromDB = await _latestService.GetAsync();
+
+        if (latestFromDB == null)
+        {
+            return new LatestDTO() {latest = -1};
+        }
+        return latestFromDB;
     }
 
     [HttpPost("/sim/register")]
@@ -154,11 +160,17 @@ public class SimController : ControllerBase
         return null;
     }
 
-    public void UpdateLatest(int? latest)
+    public async void UpdateLatest(int? latest)
     {
         if (latest != null)
         {
-            _latest = (int)latest;
+            var status = await _latestService.UpdateAsync(new LatestDTO() {latest = (int) latest});
+
+            // Figure out what to do here... log? error handling?
+            if (status == Status.Conflict)
+            {
+                System.Console.WriteLine("ERROR IN LATEST UPDATEASYNC");
+            }
         }
     }
 }
