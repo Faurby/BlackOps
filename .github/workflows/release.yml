@@ -37,11 +37,11 @@ jobs:
         with:
           version: ${{ steps.previoustag.outputs.tag }}
           
-      - name: "Build Changelog"
-        id: Changelog
-        uses: scottbrenner/generate-changelog-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v3.0.0
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Create Minor Release
         if: ${{ github.event_name == 'push'}}
@@ -54,7 +54,7 @@ jobs:
           release_name: Release ${{ steps.semvers.outputs.minor }}
           body: |
             Minor release
-            ${{steps.Changelog.outputs.changelog}}
+            ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
           
@@ -69,6 +69,6 @@ jobs:
           release_name: Release ${{ steps.semvers.outputs.major }}
           body: |
             Major release
-            ${{steps.Changelog.outputs.changelog}}
+            ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
