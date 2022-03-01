@@ -1,7 +1,11 @@
+# Ignore generic files and folders
 obj/
 bin/
 .fake
 .ionide
+
+# Ignore database
 db/
-MongoDB/
+# Ignore Vagrant file
 .vagrant/
+
