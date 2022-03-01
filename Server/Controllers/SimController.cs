@@ -7,7 +7,7 @@ public class SimController : ControllerBase
     private readonly IMessagesService _messagesService;
     private readonly IUsersService _usersService;
 
-    private int _latest;
+    private int _latest = -1;
 
     public SimController(IMessagesService messagesservice, IUsersService usersService)
     {
@@ -16,9 +16,9 @@ public class SimController : ControllerBase
     }
 
     [HttpGet("/sim/latest")]
-    public Task<int> GetLatest()
+    public ActionResult<LatestDTO> GetLatest()
     {
-        return Task.FromResult(_latest);
+        return new LatestDTO() {latest = _latest};
     }
 
     [HttpPost("/sim/register")]
