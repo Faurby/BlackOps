@@ -13,6 +13,7 @@ builder.Services.Configure<MiniTwitDatabaseSettings>(builder.Configuration.GetSe
 builder.Services.AddSingleton<IMessagesService, MessagesService>();
 builder.Services.AddSingleton<IUsersService, UsersService>();
 builder.Services.AddSingleton<Utility>();
+builder.Services.AddSingleton<ILatestService, LatestService>();
 
 builder.Services.AddSingleton<IMongoDatabase>(s =>
     new MongoClient(builder.Configuration.GetConnectionString("MongoDB")).GetDatabase("MiniTwit")
