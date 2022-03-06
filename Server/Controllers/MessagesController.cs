@@ -100,4 +100,8 @@ public class MessagesController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("virtualized/{pageSize}&{startIndex}")]
+    public async Task<ActionResult<VirtualizedResponse<List<Message>>>> GetVirtualizedAsync(int pageSize, int startIndex) 
+        => Ok(await _messagesService.GetVirtualizedAsync(new VirtualizedParams(){StartIndex = startIndex, PageSize = pageSize}));
 }

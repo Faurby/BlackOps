@@ -2,7 +2,6 @@
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 
-
 @* Base uri for the application Used as public timeline (showing all messages from all users) *@
 
 <PageTitle>MiniTwit</PageTitle>
@@ -19,7 +18,10 @@
   @if (messages != null)
   {
     <div style="height:90vh; overflow-y:scroll">
-      <Virtualize Items="@messages" Context="message">
+
+      (@*<Virtualize Items="@messages" Context="message">-->*@)
+        
+      <Virtualize ItemsProvider="LoadMessages" Context="message">
         <MessageBox message="message"></MessageBox>
       </Virtualize>
     </div>
@@ -29,8 +31,8 @@
 
 @code {
   private List<Message>? messages;
-
-
+  public int TotalMessageCount { get; set; }
+  public EventCallback<VirtualizedParams> OnScroll { get; set; }
   private bool signedIn;
   private User? localUser;
   private string? gravLink;
@@ -48,4 +50,18 @@
       gravLink = await Gravatar.GenerateGravatarLink(Http, localUser.Id!, 64);
     }
   }
+
+  private async ValueTask<ItemsProviderResult<Message>> LoadMessages(ItemsProviderRequest request)
+    {
+        var numberOfRequestedMessages = Math.Min(TotalMessageCount - request.StartIndex, request.Count);
+
+        VirtualizedParams vp = new VirtualizedParams()
+        {
+            StartIndex = request.StartIndex,
+            PageSize = numberOfRequestedMessages == 0 ? request.Count : numberOfRequestedMessages
+        };
+
+        var virtualizeResult = await Http.GetFromJsonAsync<VirtualizedResponse<Message>>("api/Messages/virtualized");
+        return new ItemsProviderResult<Message>(virtualizeResult.Items, virtualizeResult.Size);
+    }
 }

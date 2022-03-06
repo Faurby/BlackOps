@@ -5,3 +5,4 @@ bin/
 db/
 MongoDB/
 .vagrant/
+data/db/*
