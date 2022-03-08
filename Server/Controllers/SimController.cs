@@ -137,13 +137,7 @@ public class SimController : ControllerBase
             return NoContent();
         }
     }
-
-    //HttpPost("/fllws/{userID:length(24)}")]
-
-    //public async Task<ActionResult> PostUserInFollowers(string userID) =>
-    //await _usersService.PostFollowerAsync(userID);
-
-    public async Task<Message?> ConvertToMessage(MessageSim newMessage, string username)
+    private async Task<Message?> ConvertToMessage(MessageSim newMessage, string username)
     {
         var message = new Message();
 
@@ -159,8 +153,7 @@ public class SimController : ControllerBase
         }
         return null;
     }
-
-    public async void UpdateLatest(int? latest)
+    private async void UpdateLatest(int? latest)
     {
         if (latest != null)
         {

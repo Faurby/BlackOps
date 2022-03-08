@@ -11,6 +11,12 @@ public class MessagesController : ControllerBase
     [HttpGet]
     public async Task<List<Message>> Get() => await _messagesService.GetAsync();
 
+
+    [HttpGet("virtualized/{startIndex}&{pageSize}")]
+    public async Task<ActionResult<VirtualizedResponse<List<Message>>>> GetVirtualizedAsync(int startIndex, int pageSize) 
+        => Ok(await _messagesService.GetVirtualizedAsync(startIndex, pageSize));
+
+
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Message>> Get(string id)
     {
@@ -98,8 +104,4 @@ public class MessagesController : ControllerBase
 
         return NoContent();
     }
-
-    [HttpGet("virtualized/{pageSize}&{startIndex}")]
-    public async Task<ActionResult<VirtualizedResponse<List<Message>>>> GetVirtualizedAsync(int pageSize, int startIndex) 
-        => Ok(await _messagesService.GetVirtualizedAsync(new VirtualizedParams(){StartIndex = startIndex, PageSize = pageSize}));
 }
