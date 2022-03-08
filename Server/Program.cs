@@ -4,6 +4,7 @@ using Blazored.LocalStorage;
 using MyApp.Server;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,19 +78,23 @@ app.UseSwaggerUI();
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
-
 app.UseRouting();
+
+// Prometheus stuff
+app.UseMetricServer();
+app.UseHttpMetrics();
+
+// app.UseEndpoints(endpoints =>
+//     {
+//         endpoints.MapControllers();
+//         endpoints.MapMetrics();
+//     });
 
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 // app.Seed();
-
-// Creates new thread that inits the services for futures use. This is needed for the ReadTimeout bug on the
-// First request in the minitwit_simulator.py script (timeout is 300 ms and it takes a little longer to initialize and 
-// respond to the request)
-
 
 app.Run();
 
