@@ -1,9 +1,5 @@
 using Microsoft.OpenApi.Models;
-using MiniTwit.Server;
 using Blazored.LocalStorage;
-using MyApp.Server;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 

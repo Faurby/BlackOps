@@ -15,24 +15,17 @@
   {
     <NewPostBox gravLink=@gravLink></NewPostBox>
   }
-  @if (messages != null)
-  {
-    <div style="height:90vh; overflow-y:scroll">
-
-      (@*<Virtualize Items="@messages" Context="message">-->*@)
-        
-      <Virtualize ItemsProvider="LoadMessages" Context="message">
-        <MessageBox message="message"></MessageBox>
-      </Virtualize>
-    </div>
-  }
-
+  <!--<div style="height:500px;overflow-y:scroll">-->
+    <Virtualize Context="message" ItemsProvider="LoadMessages">
+    <!--<Virtualize Context="message" Items=messages>-->
+      <MessageBox message=message></MessageBox>
+    </Virtualize>
+  <!--</div>-->
 </div>
 
 @code {
   private List<Message>? messages;
   public int TotalMessageCount { get; set; }
-  public EventCallback<VirtualizedParams> OnScroll { get; set; }
   private bool signedIn;
   private User? localUser;
   private string? gravLink;
@@ -53,15 +46,12 @@
 
   private async ValueTask<ItemsProviderResult<Message>> LoadMessages(ItemsProviderRequest request)
     {
-        var numberOfRequestedMessages = Math.Min(TotalMessageCount - request.StartIndex, request.Count);
-
-        VirtualizedParams vp = new VirtualizedParams()
-        {
-            StartIndex = request.StartIndex,
-            PageSize = numberOfRequestedMessages == 0 ? request.Count : numberOfRequestedMessages
-        };
-
-        var virtualizeResult = await Http.GetFromJsonAsync<VirtualizedResponse<Message>>("api/Messages/virtualized");
-        return new ItemsProviderResult<Message>(virtualizeResult.Items, virtualizeResult.Size);
+        System.Console.WriteLine("Fetching items!");
+        System.Console.WriteLine("start index: " + request.StartIndex + " - count: " + request.Count);
+        //var numberOfRequestedMessages = Math.Min(TotalMessageCount - request.StartIndex, request.Count);
+        //var pageSize = numberOfRequestedMessages == 0 ? request.Count : numberOfRequestedMessages;
+        
+        var virtualizeResult = await Http.GetFromJsonAsync<VirtualizedResponse<Message>>("api/Messages/virtualized/"+ request.StartIndex + "&" + request.Count);
+        return new ItemsProviderResult<Message>(virtualizeResult!.Items, virtualizeResult!.Size);
     }
 }
