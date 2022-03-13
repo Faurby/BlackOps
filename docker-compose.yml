@@ -1,4 +1,7 @@
-version: '3.3'
+version: "3.6"
+
+networks:
+  monitoring:
 
 services:
   db:
@@ -15,14 +18,16 @@ services:
     depends_on:
       - prometheus
       - grafana
-    
+    networks:
+      - monitoring
+
   webserver:
     image: faurby/webserver
     build:
       context: .
       dockerfile: ./Dockerfile-webserver
     environment:
-        ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Production
     ports:
       - 5142:80
       - 7199:443
@@ -31,6 +36,8 @@ services:
       - db
       - prometheus
       - grafana
+    networks:
+      - monitoring
 
   prometheus:
     image: prom/prometheus
@@ -39,11 +46,15 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    networks:
+      - monitoring
 
   grafana:
     image: grafana/grafana:4.5.2
     ports:
-      - "3000:3000"  
+      - "3000:3000"
+    networks:
+      - monitoring
 
 volumes:
   grafana-storage:
