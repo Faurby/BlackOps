@@ -15,26 +15,15 @@
   {
     <NewPostBox gravLink=@gravLink></NewPostBox>
   }
-  <!--<div style="height:500px;overflow-y:scroll">-->
-    <Virtualize Context="message" ItemsProvider="LoadMessages">
-    <!--<Virtualize Context="message" Items=messages>-->
-      <MessageBox message=message></MessageBox>
-    </Virtualize>
-  <!--</div>-->
+  <MessageFeed></MessageFeed>
 </div>
 
 @code {
-  private List<Message>? messages;
-  public int TotalMessageCount { get; set; }
   private bool signedIn;
   private User? localUser;
   private string? gravLink;
-
   protected override async Task OnInitializedAsync()
   {
-    // Get all messages through the API
-    messages = await Http.GetFromJsonAsync<List<Message>>("api/Messages");
-
     localUser = await localStore.GetItemAsync<User>("user");
       
     if (localUser != null)
@@ -43,15 +32,4 @@
       gravLink = await Gravatar.GenerateGravatarLink(Http, localUser.Id!, 64);
     }
   }
-
-  private async ValueTask<ItemsProviderResult<Message>> LoadMessages(ItemsProviderRequest request)
-    {
-        System.Console.WriteLine("Fetching items!");
-        System.Console.WriteLine("start index: " + request.StartIndex + " - count: " + request.Count);
-        //var numberOfRequestedMessages = Math.Min(TotalMessageCount - request.StartIndex, request.Count);
-        //var pageSize = numberOfRequestedMessages == 0 ? request.Count : numberOfRequestedMessages;
-        
-        var virtualizeResult = await Http.GetFromJsonAsync<VirtualizedResponse<Message>>("api/Messages/virtualized/"+ request.StartIndex + "&" + request.Count);
-        return new ItemsProviderResult<Message>(virtualizeResult!.Items, virtualizeResult!.Size);
-    }
 }
