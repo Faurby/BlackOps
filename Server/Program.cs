@@ -87,11 +87,11 @@ app.UseHttpMetrics();
 Metrics.CreateCounter("sampleapp_ticks_total", "tik tok tik tok");
 
 
-// app.UseEndpoints(endpoints =>
-//     {
-//         endpoints.MapControllers();
-//         endpoints.MapMetrics();
-//     });
+app.UseEndpoints(endpoints =>
+     {
+         endpoints.MapControllers();
+         endpoints.MapMetrics();
+     });
 
 app.MapRazorPages();
 app.MapControllers();
