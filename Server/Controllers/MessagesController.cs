@@ -11,6 +11,12 @@ public class MessagesController : ControllerBase
     [HttpGet]
     public async Task<List<Message>> Get() => await _messagesService.GetAsync();
 
+
+    [HttpGet("virtualized/{startIndex}&{pageSize}")]
+    public async Task<ActionResult<VirtualizedResponse<List<Message>>>> GetVirtualizedAsync(int startIndex, int pageSize) 
+        => Ok(await _messagesService.GetVirtualizedAsync(startIndex, pageSize));
+
+
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Message>> Get(string id)
     {

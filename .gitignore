@@ -8,4 +8,7 @@ bin/
 db/
 # Ignore Vagrant file
 .vagrant/
+data/db/*
 
+# Ignore vscode
+.vscode/

@@ -2,7 +2,6 @@
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStore
 
-
 @* Base uri for the application Used as public timeline (showing all messages from all users) *@
 
 <PageTitle>MiniTwit</PageTitle>
@@ -16,30 +15,15 @@
   {
     <NewPostBox gravLink=@gravLink></NewPostBox>
   }
-  @if (messages != null)
-  {
-    <div style="height:90vh; overflow-y:scroll">
-      <Virtualize Items="@messages" Context="message">
-        <MessageBox message="message"></MessageBox>
-      </Virtualize>
-    </div>
-  }
-
+  <MessageFeed></MessageFeed>
 </div>
 
 @code {
-  private List<Message>? messages;
-
-
   private bool signedIn;
   private User? localUser;
   private string? gravLink;
-
   protected override async Task OnInitializedAsync()
   {
-    // Get all messages through the API
-    messages = await Http.GetFromJsonAsync<List<Message>>("api/Messages");
-
     localUser = await localStore.GetItemAsync<User>("user");
       
     if (localUser != null)

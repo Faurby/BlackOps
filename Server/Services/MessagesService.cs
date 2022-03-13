@@ -46,5 +46,16 @@ public class MessagesService : IMessagesService
         var user = await _usersCollection.Find(x => x.Id == userID).FirstOrDefaultAsync();
         return await _messagesCollection.Find(x => user.Follows.Contains(x.AuthorID)).ToListAsync();
     }
+    public async Task<VirtualizedResponse<Message>> GetVirtualizedAsync(int startIndex, int pageSize)
+    {
+        var messages = await _messagesCollection
+            .Find(_ => true)
+            .SortByDescending(m => m.Timestamp)
+            .Skip(startIndex)
+            .Limit(pageSize)
+            .ToListAsync();
 
+        System.Console.WriteLine("Returning: " + messages.Count);
+        return new VirtualizedResponse<Message>(){Items = messages, Size = startIndex + messages.Count+5};
+    }
 }

@@ -1,0 +1,49 @@
+@inject HttpClient Http
+
+<Virtualize Context="message" ItemsProvider="LoadMessages">
+    <MessageBox message=message></MessageBox>
+</Virtualize>
+
+
+@code {
+    private Dictionary<int, Message> messageCacheNew;
+
+    protected override async Task OnInitializedAsync()
+    {
+        messageCacheNew = new Dictionary<int, Message>();
+    }
+
+    private async ValueTask<ItemsProviderResult<Message>> LoadMessages(ItemsProviderRequest request)
+    {
+        // Make sure all requested items exist in cache
+        for (int i = request.StartIndex; i < request.StartIndex + request.Count; i++)
+        {
+            if (!messageCacheNew.ContainsKey(i))
+            {
+                // If key is not contained in cache, request from database
+                var virtualizeResult = await Http.GetFromJsonAsync<VirtualizedResponse<Message>>("api/Messages/virtualized/" +
+                request.StartIndex + "&" + request.Count);
+
+                // Add retrieved items to cache
+                for (int j = 0; j < virtualizeResult.Items.Count; j++)
+                {
+                    int newKey = request.StartIndex + j;
+
+                    if (!messageCacheNew.ContainsKey(newKey))
+                    {
+                        messageCacheNew.Add(newKey, virtualizeResult.Items[j]);
+                    }
+                }
+                return new ItemsProviderResult<Message>(virtualizeResult!.Items, virtualizeResult!.Size); ;
+            }
+        }
+
+        // Once we are sure the messages exists in cache we can return from cache
+        List<Message> messagesFromCache =
+        messageCacheNew.Keys
+        .Where(key => (request.StartIndex < key && key < request.StartIndex + request.Count))
+        .Select(k => messageCacheNew[k]).ToList();
+
+        return new ItemsProviderResult<Message>(messagesFromCache, messageCacheNew.Count + 5); ;
+    }
+}
