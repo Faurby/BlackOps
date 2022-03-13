@@ -15,7 +15,7 @@ public class LatestService : ILatestService
 
         if (latestDB == null)
         {
-            return null;
+            return new LatestDTO {};
         }
 
         return new LatestDTO() { latest = latestDB.latest };
