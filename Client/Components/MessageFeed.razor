@@ -15,15 +15,11 @@
 
     private async ValueTask<ItemsProviderResult<Message>> LoadMessages(ItemsProviderRequest request)
     {
-        //System.Console.WriteLine("start index: " + request.StartIndex + " - count: " + request.Count);
-
         // Make sure all requested items exist in cache
         for (int i = request.StartIndex; i < request.StartIndex + request.Count; i++)
         {
             if (!messageCacheNew.ContainsKey(i))
             {
-                //System.Console.WriteLine("cache did not contain all items, fetching from database");
-
                 // If key is not contained in cache, request from database
                 var virtualizeResult = await Http.GetFromJsonAsync<VirtualizedResponse<Message>>("api/Messages/virtualized/" +
                 request.StartIndex + "&" + request.Count);
@@ -32,19 +28,15 @@
                 for (int j = 0; j < virtualizeResult.Items.Count; j++)
                 {
                     int newKey = request.StartIndex + j;
-                    //System.Console.WriteLine("adding key: " + newKey);
 
                     if (!messageCacheNew.ContainsKey(newKey))
                     {
-                        //System.Console.WriteLine("key already existed: " + newKey);
                         messageCacheNew.Add(newKey, virtualizeResult.Items[j]);
                     }
                 }
                 return new ItemsProviderResult<Message>(virtualizeResult!.Items, virtualizeResult!.Size); ;
             }
         }
-
-        //System.Console.WriteLine("Items exist in cache!");
 
         // Once we are sure the messages exists in cache we can return from cache
         List<Message> messagesFromCache =
@@ -54,5 +46,4 @@
 
         return new ItemsProviderResult<Message>(messagesFromCache, messageCacheNew.Count + 5); ;
     }
-
 }
