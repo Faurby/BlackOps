@@ -1,6 +1,7 @@
 @page "/user/{id}"
 @inject HttpClient Http
 @inject Blazored.LocalStorage.ILocalStorageService localStore
+@inject IModalService modal
 
 
 @if (requestedUser != null)
@@ -57,15 +58,25 @@ else
     // Follow the user via posting a followDTO to UsersController (followDTO simply holds whoID & whomID)
     private async Task FollowUser()
     {
-        var followDTO = new FollowDTO { WhoID = localUser!.Id, WhomID = id };
-
-        var response = await Http.PostAsJsonAsync("api/Users/follow/", followDTO);
-        if (response.IsSuccessStatusCode)
+        if (localUser!.Id != id)
         {
-            // Update the localUser and call StateHasChanged(). StateHasChanged() makes blazor look at all variables used in
-            // code and updates components if necessary.
-            await UpdateLocalUser();
-            StateHasChanged();
+            var followDTO = new FollowDTO { WhoID = localUser!.Id, WhomID = id };
+
+            var response = await Http.PostAsJsonAsync("api/Users/follow/", followDTO);
+            if (response.IsSuccessStatusCode)
+            {
+                // Update the localUser and call StateHasChanged(). StateHasChanged() makes blazor look at all variables used in
+                // code and updates components if necessary.
+                await UpdateLocalUser();
+                StateHasChanged();
+            }
+        } 
+        else 
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(ErrorBox.message), "You can't follow yourself...");
+            modal.Show<ErrorBox>("Error", parameters);
+            return;
         }
     }
 

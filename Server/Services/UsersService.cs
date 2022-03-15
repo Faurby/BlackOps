@@ -4,9 +4,12 @@ public class UsersService : IUsersService
 {
     private readonly IMongoCollection<User> _usersCollection;
 
+    private Counter _userCounter = Metrics.CreateCounter("Users_counter", "Total number of current users");
+
     public UsersService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings, IMongoDatabase mongoDatabase)
     {
         _usersCollection = mongoDatabase.GetCollection<User>(miniTwitDatabaseSettings.Value.UsersCollectionName);
+        _userCounter.IncTo(GetAsync().Result.Count);
     }
 
     public async Task<List<User>> GetAsync() => await _usersCollection.Find(_ => true).ToListAsync();
@@ -32,6 +35,7 @@ public class UsersService : IUsersService
         else
         {
             await _usersCollection.InsertOneAsync(newUser);
+            _userCounter.Inc();
             return Status.Created;
         }
 
