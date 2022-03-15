@@ -1,9 +1,11 @@
 namespace MiniTwit.Server;
 
+
 public class MessagesService : IMessagesService
 {
     private readonly IMongoCollection<Message> _messagesCollection;
     private readonly IMongoCollection<User> _usersCollection;
+    private Counter _msgCounter = Metrics.CreateCounter("Message Counter", "Counts the amount of messages added to the database");
 
     public MessagesService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings, IMongoDatabase mongoDatabase)
     {
@@ -11,6 +13,8 @@ public class MessagesService : IMessagesService
 
         _messagesCollection = mongoDatabase.GetCollection<Message>(miniTwitDatabaseSettings.Value.MessagesCollectionName);
         _usersCollection = mongoDatabase.GetCollection<User>(miniTwitDatabaseSettings.Value.UsersCollectionName);
+
+        _msgCounter.IncTo(GetAsync().Result.Count());
     }
 
     public async Task<List<Message>> GetAsync()
@@ -32,6 +36,7 @@ public class MessagesService : IMessagesService
     public async Task<Status> CreateAsync(Message newMessage)
     {
         await _messagesCollection.InsertOneAsync(newMessage);
+        _msgCounter.Inc();
         return Status.Created;
     }
 
