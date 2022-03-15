@@ -4,7 +4,7 @@ public class UsersService : IUsersService
 {
     private readonly IMongoCollection<User> _usersCollection;
 
-    private Counter _userCounter = Metrics.CreateCounter("Users counter", "Total number of current users");
+    private Counter _userCounter = Metrics.CreateCounter("Users_counter", "Total number of current users");
 
     public UsersService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings, IMongoDatabase mongoDatabase)
     {

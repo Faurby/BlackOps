@@ -5,7 +5,7 @@ public class MessagesService : IMessagesService
 {
     private readonly IMongoCollection<Message> _messagesCollection;
     private readonly IMongoCollection<User> _usersCollection;
-    private Counter _msgCounter = Metrics.CreateCounter("Message Counter", "Counts the amount of messages added to the database");
+    private Counter _msgCounter = Metrics.CreateCounter("Message_Counter", "Counts the amount of messages added to the database");
 
     public MessagesService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings, IMongoDatabase mongoDatabase)
     {
