@@ -12,3 +12,6 @@ data/db/*
 
 # Ignore vscode
 .vscode/
+
+# Ignore Idea
+.idea/
