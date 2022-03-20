@@ -4,12 +4,14 @@ public class UsersService : IUsersService
 {
     private readonly IMongoCollection<User> _usersCollection;
 
-    private Counter _userCounter = Metrics.CreateCounter("Users_counter", "Total number of current users");
+    private readonly Counter _userCounter = Metrics.CreateCounter("Users_counter", "Total number of current users");
+    private readonly Gauge _followersGauge = Metrics.CreateGauge("Followers_gauge", "Total amount of followers for all users");
 
     public UsersService(IOptions<MiniTwitDatabaseSettings> miniTwitDatabaseSettings, IMongoDatabase mongoDatabase)
     {
         _usersCollection = mongoDatabase.GetCollection<User>(miniTwitDatabaseSettings.Value.UsersCollectionName);
         _userCounter.IncTo(GetAsync().Result.Count);
+        _followersGauge.IncTo(GetAsync().Result.Select(user => user.Followers.Count).Sum()); // TODO
     }
 
     public async Task<List<User>> GetAsync() => await _usersCollection.Find(_ => true).ToListAsync();
@@ -61,7 +63,8 @@ public class UsersService : IUsersService
 
             await UpdateAsync(user.Id!, user);
             await UpdateAsync(userWhomToFollow.Id!, userWhomToFollow);
-
+            
+            _followersGauge.Inc();
             return Status.Success;
         }
         else
@@ -83,7 +86,8 @@ public class UsersService : IUsersService
 
             await UpdateAsync(user.Id!, user);
             await UpdateAsync(userWhomToUnfollow.Id!, userWhomToUnfollow);
-
+            _followersGauge.IncTo(_followersGauge.Value-1);
+            _followersGauge.Dec();
             return Status.Success;
         }
         else
