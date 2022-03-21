@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
-  build_and_analyse:
+  snyk:
     runs-on: ubuntu-latest
     steps:
       # Checkout this branch
@@ -30,8 +30,7 @@ jobs:
         with:
           image: faurby/webserver
           args: --file=Dockerfile-webserver
-      - name: Upload webserver result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
+      - uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: snyk.sarif
       # db - Snyk docker scan
@@ -43,7 +42,6 @@ jobs:
         with:
           image: faurby/db
           args: --file=Dockerfile-db
-      - name: Upload db result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
+      - uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: snyk.sarif
