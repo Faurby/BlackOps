@@ -7,53 +7,40 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repository: [webserver, db]
     steps:
       # Checkout this branch
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      # Build and push docker images to the hub
+      - name: build and push docker images
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          DOCKER_BUILDKIT: 1
+        run: |
+          docker build -t faurby/${{ matrix.repository }}  \
+                        -f Dockerfile-${{ matrix.repository }} \
+                        --target scan-result \
+                        --output type=local,dest=${{ matrix.repository }} \
+                        --build-arg SNYK_TOKEN=${SNYK_TOKEN} .
+      # Check Snyk status
+      - name: Check snyk scan status
+        run: |
+          result=$( cat application/${{ matrix.repository }}/snyk.sarif | \
+            jq -r '.runs[].results | length'
+          )
+          exit $result
       # Log into docker hub
       - name: Log into dockerhub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      # Build webserver image
-      - name: build webserver image
-        run: docker build -t faurby/webserver -f Dockerfile-webserver .
-      # Build database image
-      - name: build database image
-        run: docker build -t faurby/db -f Dockerfile-db .
-      # webserver - Snyk docker scan
-      - name: Run Snyk to check Docker image for vulnerabilities
-        continue-on-error: true
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: faurby/webserver
-          args: --file=Dockerfile-webserver
-      - name: Upload webserver result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: snyk.sarif
-      # db - Snyk docker scan
-      - name: Run Snyk to check Docker image for vulnerabilities
-        continue-on-error: true
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: faurby/db
-          args: --file=Dockerfile-db
-      - name: Upload db result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: snyk.sarif
-      # Push webserver image
-      - name: push webserver image
-        run: docker push faurby/webserver:latest
-      # Push database image
-      - name: push database image
-        run: docker push faurby/db:latest
+      # Build and push docker images to the hub
+      - name: build and push docker images
+      
       # deploy
       - name: Deploy to production
         uses: fifsky/ssh-action@master
@@ -65,3 +52,17 @@ jobs:
             git pull
             docker-compose pull
             docker-compose up -d
+      # Scan
+      - name: Snyk Container Scan Webserver
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+          DEBUG: true
+          SNYK_TOKEN: ${{secrets.SNYK_TOKEN}}
+        with:
+          image: faurby/webserver:${{steps.vars.outputs.tag}}
+          args: --file=Dockerfile-webserver
+      - name: Upload result to Github Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.sarif
