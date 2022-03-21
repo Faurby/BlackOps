@@ -2,7 +2,7 @@ name: Snyk Scan
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 jobs:
   snyk:
     runs-on: ubuntu-latest
