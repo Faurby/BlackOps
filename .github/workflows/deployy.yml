@@ -16,9 +16,44 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      # Build and push docker images to the hub
-      - name: build and push docker images
-        run: ./docker.sh
+      # Build webserver image
+      - name: build webserver image
+        run: docker build -t faurby/webserver -f Dockerfile-webserver .
+      # Build database image
+      - name: build database image
+        run: docker build -t faurby/db -f Dockerfile-db .
+      # webserver - Snyk docker scan
+      - name: Run Snyk to check Docker image for vulnerabilities
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: faurby/webserver
+          args: --file=Dockerfile-webserver
+      - name: Upload webserver result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.sarif
+      # db - Snyk docker scan
+      - name: Run Snyk to check Docker image for vulnerabilities
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: faurby/db
+          args: --file=Dockerfile-db
+      - name: Upload db result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.sarif
+      # Push webserver image
+      - name: push webserver image
+        run: docker push faurby/webserver:latest
+      # Push database image
+      - name: push database image
+        run: docker push faurby/db:latest
       # deploy
       - name: Deploy to production
         uses: fifsky/ssh-action@master
