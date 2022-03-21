@@ -1,4 +1,4 @@
-name: Deploy changes
+name: Snyk Scan
 
 on:
   pull_request:
