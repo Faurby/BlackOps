@@ -8,31 +8,9 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        repository: [webserver, db]
     steps:
       # Checkout this branch
-      - name: Checkout
-        uses: actions/checkout@v2
-      # Build and push docker images to the hub
-      - name: build and push docker images
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          DOCKER_BUILDKIT: 1
-        run: |
-          docker build -t faurby/${{ matrix.repository }}  \
-                        -f Dockerfile-${{ matrix.repository }} \
-                        --target scan-result \
-                        --output type=local,dest=${{ matrix.repository }} \
-                        --build-arg SNYK_TOKEN=${SNYK_TOKEN} .
-      # Check Snyk status
-      - name: Check snyk scan status
-        run: |
-          result=$( cat application/${{ matrix.repository }}/snyk.sarif | \
-            jq -r '.runs[].results | length'
-          )
-          exit $result
+      - uses: actions/checkout@v2
       # Log into docker hub
       - name: Log into dockerhub
         uses: docker/login-action@v1
@@ -41,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
       # Build and push docker images to the hub
       - name: build and push docker images
-      
+        run: ./docker.sh
       # deploy
       - name: Deploy to production
         uses: fifsky/ssh-action@master
@@ -53,17 +31,3 @@ jobs:
             git pull
             docker-compose pull
             docker-compose up -d
-      # Scan
-      - name: Snyk Container Scan Webserver
-        continue-on-error: true
-        uses: snyk/actions/docker@master
-        env:
-          DEBUG: true
-          SNYK_TOKEN: ${{secrets.SNYK_TOKEN}}
-        with:
-          image: faurby/webserver:${{steps.vars.outputs.tag}}
-          args: --file=Dockerfile-webserver
-      - name: Upload result to Github Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: snyk.sarif
