@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
-  deploy:
+  build_and_analyse:
     runs-on: ubuntu-latest
     steps:
       # Checkout this branch
