@@ -1,12 +1,12 @@
-on:
+---
+name: Create Release
+
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - main
-  schedule: 
-    - cron: "0 18 * * 0" #Runs at 19:00 every Sunday every week
-  
-
-name: Create Release
+  schedule:
+    - cron: "0 18 * * 0"    # Runs at 19:00 every Sunday every week
 
 jobs:
   release:
@@ -16,40 +16,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # Required due to the way Git works. Without it, tags cannot be found
-        
+          fetch-depth: 0
+          # Required due to the way Git works. Without it, tags cannot be found
+
       - name: 'Get Previous tag'
         id: previoustag
-        run: | 
-          git fetch -t -f 
+        run: |
+          git fetch -t -f
           TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-          if [ -z "$TAG" ] 
-          then 
+          if [ -z "$TAG" ]
+          then
             exit 1
-          else 
+          else
             echo "Tag Found: $TAG"
             echo ::set-output name=tag::$TAG
           fi
-          
+
       - name: 'Get next version'
         id: semvers
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
           version: ${{ steps.previoustag.outputs.tag }}
-          
+
       - name: Generate changelog
         id: changelog
         uses: metcalfc/changelog-generator@v3.0.0
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Create Minor Release
         if: ${{ github.event_name == 'push'}}
         id: create_minor_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # This token is provided by Actions,
+          # you do not need to create your own token
+        with:
           tag_name: v${{ steps.semvers.outputs.minor }}
           release_name: Release ${{ steps.semvers.outputs.minor }}
           body: |
@@ -57,14 +60,16 @@ jobs:
             ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
-          
+
       - name: Create Major Release
         if: ${{ github.event_name == 'schedule'}}
         id: create_major_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # This token is provided by Actions,
+          # you do not need to create your own token
+        with:
           tag_name: v${{ steps.semvers.outputs.major }}
           release_name: Release ${{ steps.semvers.outputs.major }}
           body: |
