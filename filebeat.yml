@@ -1,3 +1,4 @@
+---
 filebeat.inputs:
 - type: container
   paths: 
@@ -35,5 +36,3 @@ output.elasticsearch:
 
 logging.json: true
 logging.metrics.enabled: false
-
-
