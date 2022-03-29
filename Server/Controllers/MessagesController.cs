@@ -12,9 +12,13 @@ public class MessagesController : ControllerBase
     public async Task<List<Message>> Get() => await _messagesService.GetAsync();
 
 
-    [HttpGet("virtualized/{startIndex}&{pageSize}")]
-    public async Task<ActionResult<VirtualizedResponse<List<Message>>>> GetVirtualizedAsync(int startIndex, int pageSize) 
-        => Ok(await _messagesService.GetVirtualizedAsync(startIndex, pageSize));
+    [HttpGet("virtualized/{startIndex}&{pageSize}&{openPageTime}")]
+    public async Task<ActionResult<VirtualizedResponse<List<Message>>>> GetVirtualizedAsync(int startIndex, int pageSize, string openPageTime)
+        => Ok(await _messagesService.GetVirtualizedAsync(startIndex, pageSize, DateTime.ParseExact(openPageTime,"yyyy-MM-dd-HH-mm-ss",null)));
+
+    [HttpGet("virtualized/discovernew/{openPageTime}")]
+    public async Task<ActionResult<int>> GetNewMessageCountAsync (string openPageTime)
+        => Ok(await _messagesService.GetNewMessageCountAsync(DateTime.ParseExact(openPageTime,"yyyy-MM-dd-HH-mm-ss",null)));
 
 
     [HttpGet("{id:length(24)}")]

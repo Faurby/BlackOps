@@ -7,6 +7,7 @@ public interface IMessagesService
     Task UpdateAsync(string id, Message updatedMessage);
     Task RemoveAsync(string id);
     Task<List<Message>?> GetMessagesFromFollowing(String userID);
-    Task<VirtualizedResponse<Message>> GetVirtualizedAsync(int startIndex, int pageSize);
+    Task<VirtualizedResponse<Message>> GetVirtualizedAsync(int startIndex, int pageSize, DateTime openPageTime);
+    Task<int> GetNewMessageCountAsync(DateTime openPageTime);
 
 }

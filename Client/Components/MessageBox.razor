@@ -22,6 +22,7 @@
     // Parameter is used when creating the component, you can give it a parameter to use.
     [Parameter]
     public Message? message { get; set; }
+    private string? oldAuthorID {get; set; }
     private string? gravLink;
 
     // On click, navigate to the desired users page
@@ -34,8 +35,25 @@
         }
     }
 
+    // virtualisation reuses the same component for different users, so we need to update the gravatar link
+    protected override async Task OnParametersSetAsync()
+    {
+        if(oldAuthorID != message.AuthorID)
+        {
+            // First clear current gravlink since it takes some time to update
+            gravLink = null;
+            if (message != null)
+            {
+                oldAuthorID = message.AuthorID;
+                gravLink = await Gravatar.GenerateGravatarLink(Http,message!.AuthorID,64);
+                Console.WriteLine(message.Timestamp);
+            }
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        oldAuthorID = message.AuthorID;
         gravLink = await Gravatar.GenerateGravatarLink(Http,message!.AuthorID,64);
     }
 }

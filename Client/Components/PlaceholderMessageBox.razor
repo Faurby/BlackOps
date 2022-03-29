@@ -1,0 +1,22 @@
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+@*  Message box is used in Index and MyTimeline, as the "wall" or "feed" of messages from users. 
+    It is a reusable template for displaying messages. *@
+
+<div class="messagebox">
+    <div class=avatar-slice>
+        <div class="avatar"></div>
+    </div>
+    <div class=text-slice>
+        <div class="byline">
+            <span class="username"></span>
+            <span class="timestamp"></span>
+        </div>
+        <span class="text2"></span>
+        <br>
+        <span class="text2"></span>
+        <br>
+        <span class="text1"></span>
+    </div>
+</div>

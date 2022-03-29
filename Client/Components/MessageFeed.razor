@@ -1,16 +1,40 @@
 @inject HttpClient Http
 
+<MessageFeedNewMessagesNotfication newMessageCount=@newMessageCount></MessageFeedNewMessagesNotfication>
 <Virtualize Context="message" ItemsProvider="LoadMessages">
-    <MessageBox message=message></MessageBox>
+    <ItemContent>
+        <MessageBox message=message></MessageBox>
+    </ItemContent>
+    <Placeholder>
+        <PlaceholderMessageBox></PlaceholderMessageBox>
+    </Placeholder>
 </Virtualize>
 
 
 @code {
     private Dictionary<int, Message> messageCacheNew;
+    private DateTime openPageTime;
+
+    private int oldNewMessageCount;
+    private int? newMessageCount { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         messageCacheNew = new Dictionary<int, Message>();
+
+        openPageTime = DateTime.Now;
+        Console.WriteLine("opened at: " + openPageTime);
+        StartTimerAsync();
+    }
+
+    public async void StartTimerAsync()
+    {
+        while(true){
+            newMessageCount = await Http.GetFromJsonAsync<int>("/api/Messages/virtualized/discovernew/" + openPageTime.ToString("yyyy-MM-dd-HH-mm-ss"));
+            await Task.Delay(1000);
+            Console.WriteLine("getting new message count " + newMessageCount);
+            StateHasChanged();
+        }
     }
 
     private async ValueTask<ItemsProviderResult<Message>> LoadMessages(ItemsProviderRequest request)
@@ -22,7 +46,7 @@
             {
                 // If key is not contained in cache, request from database
                 var virtualizeResult = await Http.GetFromJsonAsync<VirtualizedResponse<Message>>("api/Messages/virtualized/" +
-                request.StartIndex + "&" + request.Count);
+                request.StartIndex + "&" + request.Count + "&" + openPageTime.ToString("yyyy-MM-dd-HH-mm-ss"));
 
                 // Add retrieved items to cache
                 for (int j = 0; j < virtualizeResult.Items.Count; j++)
@@ -41,7 +65,7 @@
         // Once we are sure the messages exists in cache we can return from cache
         List<Message> messagesFromCache =
         messageCacheNew.Keys
-        .Where(key => (request.StartIndex < key && key < request.StartIndex + request.Count))
+        .Where(key => (request.StartIndex <= key && key < request.StartIndex + request.Count))
         .Select(k => messageCacheNew[k]).ToList();
 
         return new ItemsProviderResult<Message>(messagesFromCache, messageCacheNew.Count + 5); ;

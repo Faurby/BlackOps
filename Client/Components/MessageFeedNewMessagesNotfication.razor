@@ -1,0 +1,11 @@
+@inject HttpClient Http
+
+@if(newMessageCount > 0) 
+{
+  <p>@newMessageCount</p>
+}
+
+@code {
+    [Parameter]
+    public int? newMessageCount { get; set; }
+}

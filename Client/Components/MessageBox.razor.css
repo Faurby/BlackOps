@@ -18,6 +18,12 @@
     margin-bottom: 0;
 }
 
+.avatar {
+    height: 64px;
+    width: 64px;
+    background-color: rgb(201, 201, 201);
+}
+
 .text {
     font-weight: 400;
     font-size: 15;

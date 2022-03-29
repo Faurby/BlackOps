@@ -51,16 +51,41 @@ public class MessagesService : IMessagesService
         var user = await _usersCollection.Find(x => x.Id == userID).FirstOrDefaultAsync();
         return await _messagesCollection.Find(x => user.Follows.Contains(x.AuthorID)).ToListAsync();
     }
-    public async Task<VirtualizedResponse<Message>> GetVirtualizedAsync(int startIndex, int pageSize)
+    public async Task<VirtualizedResponse<Message>> GetVirtualizedAsync(int startIndex, int pageSize, DateTime openPageTime)
     {
+        // print timestamp of lastest message
+        var latestMessage = await _messagesCollection.Find(_ => true).SortByDescending(x => x.Timestamp).Limit(1).FirstOrDefaultAsync();
+        Console.WriteLine("-----");
+        Console.WriteLine("Latest message: " + latestMessage.Timestamp);
+        Console.WriteLine("Open time: " + openPageTime);
+        Console.WriteLine(latestMessage.Timestamp < openPageTime);
+
+
+        var filterBuilder1 = Builders<Message>.Filter;
+        var filter1 = filterBuilder1.Lt(x => x.Timestamp, openPageTime);
+
         var messages = await _messagesCollection
-            .Find(_ => true)
+            .Find(filter1)
+            //.Find(_ => true)
             .SortByDescending(m => m.Timestamp)
             .Skip(startIndex)
             .Limit(pageSize)
             .ToListAsync();
 
-        System.Console.WriteLine("Returning: " + messages.Count);
+        //System.Console.WriteLine("Returning: " + messages.Count);
         return new VirtualizedResponse<Message>(){Items = messages, Size = startIndex + messages.Count+5};
+    }
+
+    public async Task<int> GetNewMessageCountAsync(DateTime openPageTime)
+    {
+        var filterBuilder1 = Builders<Message>.Filter;
+        var filter1 = filterBuilder1.Gt(x => x.Timestamp, openPageTime);
+
+        //get messages later than openPageTime
+        var messages = await _messagesCollection
+            .Find(filter1)
+            .ToListAsync();
+
+        return messages.Count;
     }
 }
