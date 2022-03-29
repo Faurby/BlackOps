@@ -90,8 +90,8 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock
     networks:
         - elk
-          
-  nginx: 
+
+  nginx:
     image: nginx
     ports:
       - 9200:9200
