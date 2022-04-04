@@ -86,7 +86,6 @@ services:
         limits:
           cpus: '0.25'
           memory: 256m
-
     environment:
         elasticsearch.hosts: '["http://elasticsearch:9200"]'
     networks:
@@ -94,11 +93,6 @@ services:
 
   filebeat:
     image: "docker.elastic.co/beats/filebeat:7.17.1"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 256m
     environment:
         - "ELK_USER=${ELK_USER}"
     user: root
@@ -111,11 +105,6 @@ services:
 
   nginx:
     image: nginx
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 256m
     ports:
       - 9200:9200
       - 5601:5601
