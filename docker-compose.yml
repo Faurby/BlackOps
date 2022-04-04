@@ -68,8 +68,9 @@ services:
   elasticsearch:
     image: "docker.elastic.co/elasticsearch/elasticsearch:7.17.1"
     environment:
-      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
       - "discovery.type=single-node"
+    mem_limit: 256m
+    cpus: 0.25
     volumes:
       - elk_elasticsearch_data:/usr/share/elasticsearch/data
     networks:
@@ -77,6 +78,8 @@ services:
 
   kibana:
     image: "docker.elastic.co/kibana/kibana:7.17.1"
+    mem_limit: 256m
+    cpus: 0.25
     environment:
         elasticsearch.hosts: '["http://elasticsearch:9200"]'
     networks:
@@ -84,6 +87,8 @@ services:
 
   filebeat:
     image: "docker.elastic.co/beats/filebeat:7.17.1"
+    mem_limit: 256m
+    cpus: 0.25
     environment:
         - "ELK_USER=${ELK_USER}"
     user: root
@@ -96,6 +101,8 @@ services:
 
   nginx:
     image: nginx
+    mem_limit: 256m
+    cpus: 0.25
     ports:
       - 9200:9200
       - 5601:5601
