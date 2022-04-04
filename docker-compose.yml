@@ -110,8 +110,11 @@ services:
 
   nginx:
     image: nginx
-    mem_limit: 256m
-    cpus: 0.25
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256m
     ports:
       - 9200:9200
       - 5601:5601
