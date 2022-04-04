@@ -73,7 +73,7 @@ services:
       resources:
         limits:
           cpus: '0.25'
-          memory: 256m
+          memory: 1g
     volumes:
       - elk_elasticsearch_data:/usr/share/elasticsearch/data
     networks:
@@ -84,8 +84,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
-          memory: 256m
+          cpus: '0.5'
+          memory: 1g
     environment:
         elasticsearch.hosts: '["http://elasticsearch:9200"]'
     networks:
