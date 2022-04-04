@@ -31,4 +31,4 @@ jobs:
             git pull
             docker-compose pull
             docker-compose build
-            docker-compose up -d
+            docker-compose --compatibility up -d
