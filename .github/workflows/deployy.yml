@@ -32,3 +32,4 @@ jobs:
             docker-compose pull
             docker-compose build
             docker-compose --compatibility up -d
+
