@@ -1,33 +1,16 @@
 ---
 version: "3.6"
 
-networks:
-  monitoring:
-  elk:
+networks: 
+  default: 
+    external: 
+      name: blackops-network
 
 volumes:
   elk_elasticsearch_data:
   grafana-storage:
-  mongo-storage:
 
 services:
-  db:
-    image: faurby/db
-    volumes:
-      - mongo-storage:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=f88fa811-92c6-47b5-885b-15769f06fda3
-    ports:
-      - 27017:27017
-      - 28017:28017
-    container_name: db
-    depends_on:
-      - prometheus
-      - grafana
-    networks:
-      - monitoring
-
   webserver:
     image: faurby/webserver
     build:
@@ -44,7 +27,7 @@ services:
       - prometheus
       - grafana
     networks:
-      - monitoring
+      - blackops-network
 
   prometheus:
     image: prom/prometheus
@@ -54,7 +37,7 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - monitoring
+      - blackops-network
 
   grafana:
     image: grafana/grafana:8.4.0
@@ -63,7 +46,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - monitoring
+      - blackops-network
 
   elasticsearch:
     image: "docker.elastic.co/elasticsearch/elasticsearch:7.17.1"
@@ -77,7 +60,7 @@ services:
     volumes:
       - elk_elasticsearch_data:/usr/share/elasticsearch/data
     networks:
-      - elk
+      - blackops-network
 
   kibana:
     image: "docker.elastic.co/kibana/kibana:7.17.1"
@@ -89,7 +72,7 @@ services:
     environment:
         elasticsearch.hosts: '["http://elasticsearch:9200"]'
     networks:
-        - elk
+        - blackops-network
 
   filebeat:
     image: "docker.elastic.co/beats/filebeat:7.17.1"
@@ -101,7 +84,7 @@ services:
         - /var/lib/docker:/var/lib/docker:ro
         - /var/run/docker.sock:/var/run/docker.sock
     networks:
-        - elk
+        - blackops-network
 
   nginx:
     image: nginx
@@ -111,7 +94,7 @@ services:
       - 8881:8881
       - 8882:8882
     networks:
-      - elk
+      - blackops-network
     volumes:
       - type: bind
         source: ${ELK_DIR}/nginx.conf
