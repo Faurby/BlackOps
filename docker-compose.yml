@@ -23,7 +23,6 @@ services:
       - 7199:443
     container_name: webserver
     depends_on:
-      - db
       - prometheus
       - grafana
     networks:
