@@ -1,0 +1,20 @@
+---
+version: "3.6"
+
+volumes:
+  mongo-storage:
+
+services:
+  db:
+    image: faurby/db
+    volumes:
+      - mongo-storage:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=f88fa811-92c6-47b5-885b-15769f06fda3
+    ports:
+      - 27017:27017
+      - 28017:28017
+    container_name: db
+
+  
