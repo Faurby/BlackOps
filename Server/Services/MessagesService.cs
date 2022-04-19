@@ -60,7 +60,6 @@ public class MessagesService : IMessagesService
             .Limit(pageSize)
             .ToListAsync();
 
-        System.Console.WriteLine("Returning: " + messages.Count);
         return new VirtualizedResponse<Message>(){Items = messages, Size = startIndex + messages.Count+5};
     }
 }

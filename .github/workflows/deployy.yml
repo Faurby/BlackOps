@@ -31,5 +31,4 @@ jobs:
             git pull
             docker-compose pull
             docker-compose build
-            docker-compose --compatibility up -d
-
+            docker stack deploy -c docker-compose.yml webserver
