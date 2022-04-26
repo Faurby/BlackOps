@@ -2,22 +2,24 @@
 version: "3.6"
 
 networks: 
-  default: 
-    external: 
-      name: blackops-network
+    blackops-network:
+      external: true
 
 volumes:
-  elk_elasticsearch_data:
   grafana-storage:
 
 services:
   webserver:
-    image: faurby/webserver
+    image: faurby/webserver:latest
     build:
       context: .
       dockerfile: ./Dockerfile-webserver
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+    deploy:
+      replicas: 2
+      update_config:
+        delay: 10s
     ports:
       - 5142:80
       - 7199:443
@@ -46,58 +48,3 @@ services:
       - "3000:3000"
     networks:
       - blackops-network
-
-  elasticsearch:
-    image: "docker.elastic.co/elasticsearch/elasticsearch:7.17.1"
-    environment:
-      - "discovery.type=single-node"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 1g
-    volumes:
-      - elk_elasticsearch_data:/usr/share/elasticsearch/data
-    networks:
-      - blackops-network
-
-  kibana:
-    image: "docker.elastic.co/kibana/kibana:7.17.1"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 1g
-    environment:
-        elasticsearch.hosts: '["http://elasticsearch:9200"]'
-    networks:
-        - blackops-network
-
-  filebeat:
-    image: "docker.elastic.co/beats/filebeat:7.17.1"
-    environment:
-        - "ELK_USER=${ELK_USER}"
-    user: root
-    volumes:
-        - ${ELK_DIR}/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-        - /var/lib/docker:/var/lib/docker:ro
-        - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-        - blackops-network
-
-  nginx:
-    image: nginx
-    ports:
-      - 9200:9200
-      - 5601:5601
-      - 8881:8881
-      - 8882:8882
-    networks:
-      - blackops-network
-    volumes:
-      - type: bind
-        source: ${ELK_DIR}/nginx.conf
-        target: /etc/nginx/nginx.conf
-      - type: bind
-        source: ${ELK_DIR}/.htpasswd
-        target: /etc/nginx/.htpasswd

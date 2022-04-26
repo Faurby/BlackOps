@@ -2,9 +2,8 @@
 version: "3.6"
 
 networks: 
-  default: 
-    external: 
-      name: blackops-network
+    blackops-network:
+      external: true
 
 volumes:
   elk_elasticsearch_data:
