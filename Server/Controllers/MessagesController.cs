@@ -9,7 +9,7 @@ public class MessagesController : ControllerBase
     public MessagesController(IMessagesService messagesService) => _messagesService = messagesService;
 
     [HttpGet]
-    public async Task<List<Message>> Get() => await _messagesService.GetAsync();
+    public async Task<ActionResult<List<Message>>> Get() => Ok(await _messagesService.GetAsync());
 
 
     [HttpGet("virtualized/{startIndex}&{pageSize}")]
