@@ -1,0 +1,9 @@
+.prompt-container {
+    display: flex;
+    align-items: center;
+}
+
+a {
+    height: 20px;
+    text-align: center;
+}

@@ -1,0 +1,21 @@
+@inject HttpClient Https
+
+@if(newMessageCount > 0) 
+{
+  <div class="prompt-container">
+    <a class="prompt" href="" @onclick=@ReloadFeed @onclick:preventDefault>Click to show @newMessageCount new message@(newMessageCount > 1 ? "s" : "")</a>
+  </div>
+}
+
+@code {
+    [Parameter]
+    public int? newMessageCount { get; set; }
+
+    [Parameter]
+    public EventCallback reloadFeed { get; set; }
+
+    protected async Task ReloadFeed()
+    {
+        await reloadFeed.InvokeAsync();
+    }
+}

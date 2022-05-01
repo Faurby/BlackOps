@@ -55,10 +55,10 @@ public class MessagesService : IMessagesService
     {
         // print timestamp of lastest message
         var latestMessage = await _messagesCollection.Find(_ => true).SortByDescending(x => x.Timestamp).Limit(1).FirstOrDefaultAsync();
-        Console.WriteLine("-----");
-        Console.WriteLine("Latest message: " + latestMessage.Timestamp);
-        Console.WriteLine("Open time: " + openPageTime);
-        Console.WriteLine(latestMessage.Timestamp < openPageTime);
+        //Console.WriteLine("-----");
+        //Console.WriteLine("Latest message: " + latestMessage.Timestamp);
+        //Console.WriteLine("Open time: " + openPageTime);
+        //Console.WriteLine(latestMessage.Timestamp < openPageTime);
 
 
         var filterBuilder1 = Builders<Message>.Filter;

@@ -1,7 +1,7 @@
 @inject HttpClient Http
 
-<MessageFeedNewMessagesNotfication newMessageCount=@newMessageCount></MessageFeedNewMessagesNotfication>
-<Virtualize Context="message" ItemsProvider="LoadMessages">
+<MessageFeedNewMessagesNotification newMessageCount=@newMessageCount reloadFeed=@ReloadFeed></MessageFeedNewMessagesNotification>
+<Virtualize @ref="MessageContainer" Context="message" ItemsProvider="LoadMessages">
     <ItemContent>
         <MessageBox message=message></MessageBox>
     </ItemContent>
@@ -12,6 +12,7 @@
 
 
 @code {
+    private Virtualize<Message> MessageContainer { get; set; }
     private Dictionary<int, Message> messageCacheNew;
     private DateTime openPageTime;
 
@@ -23,7 +24,7 @@
         messageCacheNew = new Dictionary<int, Message>();
 
         openPageTime = DateTime.Now;
-        Console.WriteLine("opened at: " + openPageTime);
+        //Console.WriteLine("opened at: " + openPageTime);
         StartTimerAsync();
     }
 
@@ -32,9 +33,19 @@
         while(true){
             newMessageCount = await Http.GetFromJsonAsync<int>("/api/Messages/virtualized/discovernew/" + openPageTime.ToString("yyyy-MM-dd-HH-mm-ss"));
             await Task.Delay(1000);
-            Console.WriteLine("getting new message count " + newMessageCount);
+            //Console.WriteLine("getting new message count " + newMessageCount);
             StateHasChanged();
         }
+    }
+
+    public async void ReloadFeed()
+    {
+        openPageTime = DateTime.Now;
+        oldNewMessageCount = 0;
+        newMessageCount = 0;
+        messageCacheNew.Clear();
+        await MessageContainer.RefreshDataAsync();
+        StateHasChanged();
     }
 
     private async ValueTask<ItemsProviderResult<Message>> LoadMessages(ItemsProviderRequest request)
