@@ -1,4 +1,5 @@
 namespace MiniTwit.Server;
+using System.Linq;
 
 public class UsersService : IUsersService
 {
@@ -14,7 +15,10 @@ public class UsersService : IUsersService
         _followersGauge.IncTo(GetAsync().Result.Select(user => user.Followers.Count).Sum()); // TODO
     }
 
-    public async Task<List<User>> GetAsync() => await _usersCollection.Find(_ => true).ToListAsync();
+    public async Task<List<UserDTO>> GetAsync() {
+         var users = await _usersCollection.Find(user => true).ToListAsync();
+         return users.Select(user => new UserDTO(user.Id, user.UserName, user.Email, user.Follows, user.Followers)).ToList();
+    }
 
     public async Task<List<string>> GetFollowersAsync(string id) => (await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync()).Followers.ToList();
 
