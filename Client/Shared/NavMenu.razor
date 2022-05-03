@@ -72,7 +72,7 @@
 @code {
     private bool collapseNavMenu = true;
     private bool signedIn;
-    private User? localUser;
+    private UserDTO? localUser;
     private string? gravLink;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -83,9 +83,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        localUser = await localStore.GetItemAsync<User>("user");
+        localUser = await localStore.GetItemAsync<UserDTO>("user");
 
-        localUser = await localStore.GetItemAsync<User>("user");
+        localUser = await localStore.GetItemAsync<UserDTO>("user");
         if(localUser != null){
             signedIn = true;
             gravLink = await Gravatar.GenerateGravatarLink(Http, localUser.Id!, 64);

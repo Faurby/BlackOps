@@ -22,13 +22,22 @@ public class UsersService : IUsersService
 
     public async Task<List<string>> GetFollowersAsync(string id) => (await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync()).Followers.ToList();
 
-    public async Task<User?> GetAsync(string id) => await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+    public async Task<UserDTO?> GetAsync(string id) { 
+        var user = await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        return new UserDTO(user.Id, user.UserName, user.Email, user.Follows, user.Followers);
+    }
 
-    public async Task<User?> GetUsernameAsync(string username) => await _usersCollection.Find(x => x.UserName == username).FirstOrDefaultAsync();
+    public async Task<UserDTO?> GetUsernameAsync(string username) { 
+        var user = await _usersCollection.Find(x => x.UserName == username).FirstOrDefaultAsync();
+        return new UserDTO(user.Id, user.UserName, user.Email, user.Follows, user.Followers);
+    }
 
     public async Task<string> GetSalt(string username) => (await _usersCollection.Find(x => x.UserName == username).FirstOrDefaultAsync()).PasswordSalt!;
 
-    public async Task<User?> Signin(string username, string password) => await _usersCollection.Find(x => x.UserName == username && x.Password == password).FirstOrDefaultAsync();
+    public async Task<UserDTO?> Signin(string username, string password) 
+    {
+        var user = await _usersCollection.Find(x => x.UserName == username && x.Password == password).FirstOrDefaultAsync();
+        return new UserDTO(user.Id, user.UserName, user.Email, user.Follows, user.Followers);}
 
     public async Task<Status> CreateAsync(User newUser)
     {

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-public record UserDTO(string id, string userName, string email, HashSet<String> follows, HashSet<String> followers);
+public record UserDTO(string Id, string UserName, string Email, HashSet<String> Follows, HashSet<String> Followers);
 public record CreateUserDTO {
     // I want to create a UserDTO class which can pass the User.cs objects around the application without passing along sensitive data like passwords.
     [BsonElement("Name")]

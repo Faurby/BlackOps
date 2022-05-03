@@ -12,11 +12,11 @@ public class UsersController : ControllerBase
     public UsersController(IUsersService usersService) => _usersService = usersService;
 
     [HttpGet]
-    public async Task<List<User>> Get() => await _usersService.GetAsync();
+    public async Task<List<UserDTO>> Get() => await _usersService.GetAsync();
 
 
     [HttpGet("{id:length(24)}")]
-    public async Task<ActionResult<User>> Get(string id)
+    public async Task<ActionResult<UserDTO>> Get(string id)
     {
         var user = await _usersService.GetAsync(id);
 
@@ -29,7 +29,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("username/{username}")]
-    public async Task<ActionResult<User>> GetUsername(string username)
+    public async Task<ActionResult<UserDTO>> GetUsername(string username)
     {
         var user = await _usersService.GetUsernameAsync(username);
 
@@ -63,22 +63,22 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, User updateUser)
-    {
-        var user = await _usersService.GetAsync(id);
+    // [HttpPut("{id:length(24)}")]
+    // public async Task<IActionResult> Update(string id, UserDTO updateUser)
+    // {
+    //     var user = await _usersService.GetAsync(id);
 
-        if (user is null)
-        {
-            return NotFound();
-        }
+    //     if (user is null)
+    //     {
+    //         return NotFound();
+    //     }
 
-        updateUser.Id = user.Id;
+    //     updateUser.Id = user.Id;
 
-        await _usersService.UpdateAsync(id, updateUser);
+    //     await _usersService.UpdateAsync(id, updateUser);
 
-        return NoContent();
-    }
+    //     return NoContent();
+    // }
 
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
@@ -96,7 +96,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("signin/{username}&{password}")]
-    public async Task<ActionResult<User>> Signin(string username, string password)
+    public async Task<ActionResult<UserDTO>> Signin(string username, string password)
     {
         // Encrypt password to look for it in database
         string salt = await _usersService.GetSalt(username);

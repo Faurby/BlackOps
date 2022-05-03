@@ -25,13 +25,13 @@
 
 @code {
   private Message[]? messages;
-  private User? localUser;
+  private UserDTO? localUser;
   private string? gravLink;
 
   protected override async Task OnInitializedAsync()
   {
     // Get all messages through the API    
-    localUser = await localStore.GetItemAsync<User>("user");
+    localUser = await localStore.GetItemAsync<UserDTO>("user");
     
     if(localUser != null){
         messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/followingMessages/" + localUser.Id);

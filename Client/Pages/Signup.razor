@@ -97,7 +97,7 @@
 
 private async Task UpdateLocalUser()
     {
-        await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<User>("api/Users/username/" + user.UserName));
+        await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<UserDTO>("api/Users/username/" + user.UserName));
     }
 
     @* private void Cancel()

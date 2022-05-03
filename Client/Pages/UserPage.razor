@@ -49,9 +49,9 @@ else
 {
     [Parameter]
     public string id { get; set; } = null!;
-    private User? requestedUser;
+    private UserDTO? requestedUser;
     private Message[]? messages;
-    private User? localUser;
+    private UserDTO? localUser;
     private string? bgColor;
     private string? gravLink;
 
@@ -95,15 +95,15 @@ else
     private async Task UpdateLocalUser()
     {
         await localStore.SetItemAsync("user", await Http.GetFromJsonAsync<User>("api/Users/" + localUser!.Id!));
-        localUser = await localStore.GetItemAsync<User>("user");
+        localUser = await localStore.GetItemAsync<UserDTO>("user");
     }
 
     // Get requestedUser, their messages and localUser
     protected override async Task OnInitializedAsync()
     {
-        requestedUser = await Http.GetFromJsonAsync<User>("api/Users/" + id);
+        requestedUser = await Http.GetFromJsonAsync<UserDTO>("api/Users/" + id);
         messages = await Http.GetFromJsonAsync<Message[]>("api/Messages/userID/" + id);
-        localUser = await localStore.GetItemAsync<User>("user");
+        localUser = await localStore.GetItemAsync<UserDTO>("user");
 
         if (localUser != null && requestedUser != null)
         {

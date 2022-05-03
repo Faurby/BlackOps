@@ -50,7 +50,11 @@ public class UsersServiceTests
 
         };
 
-        var expected = new List<User>() { user1 };
+        var userDTO1 = new UserDTO(user1.Id, user1.UserName, user1.Email, user1.Follows,
+            user1.Followers)
+        ;
+
+        var expected = new List<UserDTO>() { userDTO1 };
         // Act
         var actual = await _usersService.GetAsync();
 
@@ -58,7 +62,7 @@ public class UsersServiceTests
         await AssertInListNoID(expected, actual);
     }
 
-    public async Task AssertInListNoID(List<User> expected, List<User> actual)
+    public async Task AssertInListNoID(List<UserDTO> expected, List<UserDTO> actual)
     {
         for (int i = 0; i < expected.Count; i++)
         {
@@ -66,12 +70,12 @@ public class UsersServiceTests
         }
     }
 
-    public async Task AssertTwoUsersIgnoreId(User expected, User actual)
+    public async Task AssertTwoUsersIgnoreId(UserDTO expected, UserDTO actual)
     {
         Assert.Equal(expected.UserName, actual.UserName);
         Assert.Equal(expected.Email, actual.Email);
-        Assert.Equal(expected.Password, actual.Password);
-        Assert.Equal(expected.PasswordSalt, actual.PasswordSalt);
+        // Assert.Equal(expected.Password, actual.Password);
+        // Assert.Equal(expected.PasswordSalt, actual.PasswordSalt);
 
         if (!expected.Followers.IsNullOrEmpty() && !actual.Followers.IsNullOrEmpty())
         {

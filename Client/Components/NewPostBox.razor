@@ -41,11 +41,11 @@
     [Parameter]
     public string? gravLink { get; set; }
     private string text = "";
-    private User? localUser;
+    private UserDTO? localUser;
 
     private async Task HandleValidSubmit()
     {
-        localUser = await localStore.GetItemAsync<User>("user");
+        localUser = await localStore.GetItemAsync<UserDTO>("user");
         var message = new Message {AuthorID = localUser.Id!, AuthorName = localUser.UserName, Text = text};
         var response = await Http.PostAsJsonAsync("api/Messages", message);
         if (response.IsSuccessStatusCode)

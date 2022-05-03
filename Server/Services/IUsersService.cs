@@ -2,10 +2,10 @@ public interface IUsersService
 {
     Task<List<string>> GetFollowersAsync(string id);
     Task<List<UserDTO>> GetAsync();
-    Task<User?> GetAsync(string id);
-    Task<User?> GetUsernameAsync(string username);
+    Task<UserDTO?> GetAsync(string id);
+    Task<UserDTO?> GetUsernameAsync(string username);
     Task<string> GetSalt(string username);
-    Task<User?> Signin(string username, string password);
+    Task<UserDTO?> Signin(string username, string password);
     Task<Status> CreateAsync(User newUser);
     Task UpdateAsync(string id, User updatedUser);
     Task RemoveAsync(string id);
