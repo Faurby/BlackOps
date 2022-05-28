@@ -24,7 +24,6 @@ public class SimController : ControllerBase
         {
             return new LatestDTO() {latest = -1};
         }
-        Console.WriteLine("Returning latest::: " + latestFromDB.latest);
         return latestFromDB;
     }
 

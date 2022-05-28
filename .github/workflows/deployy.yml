@@ -29,6 +29,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           command: |
             git pull
-            docker pull
-            docker stack deploy -c docker-compose.yml webserver
-            docker stack deploy -c docker-compose.logging.yml logging
+            docker-compose pull
+            docker-compose build
+            docker-compose --compatibility up -d
+

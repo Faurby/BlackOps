@@ -62,15 +62,15 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 
-    // new Thread(async () =>
-    //     {
-    //         Thread.Sleep(4000);
+    new Thread(async () =>
+        {
+            Thread.Sleep(4000);
 
-    //         HttpClient client = new HttpClient();
-    //         HttpResponseMessage response = await client.GetAsync("http://localhost:80/sim/latest");
-    //         response.EnsureSuccessStatusCode();
-    //         string responseBody = await response.Content.ReadAsStringAsync();
-    //     }).Start();
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync("http://localhost:80/sim/latest");
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+        }).Start();
 }
 app.UseSwagger();
 app.UseSwaggerUI();
