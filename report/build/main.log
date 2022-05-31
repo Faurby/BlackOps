@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.1)  31 MAY 2022 09:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.5.1)  31 MAY 2022 09:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -790,7 +790,35 @@ File: l3backend-pdftex.def 2022-04-20 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count336
 \l__pdf_internal_box=\box118
 )
-No file main.aux.
+(build/main.aux
+
+LaTeX Warning: Label `sec:mpt' multiply defined.
+
+
+LaTeX Warning: Label `ComponentDiagram_1' multiply defined.
+
+
+LaTeX Warning: Label `ComponentDiagram_1' multiply defined.
+
+
+LaTeX Warning: Label `ComponentDiagram_1' multiply defined.
+
+
+LaTeX Warning: Label `ComponentDiagram_1' multiply defined.
+
+
+LaTeX Warning: Label `sec:mpt' multiply defined.
+
+
+LaTeX Warning: Label `sec:mpt' multiply defined.
+
+
+LaTeX Warning: Label `sec:mpt' multiply defined.
+
+
+LaTeX Warning: Label `sec:mpt' multiply defined.
+
+)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
@@ -811,6 +839,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 10.
 LaTeX Font Info:    ... okay on input line 10.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 10.
 LaTeX Font Info:    ... okay on input line 10.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -872,6 +901,8 @@ Package hyperref Info: Link coloring ON on input line 10.
 LaTeX Info: Redefining \ref on input line 10.
 LaTeX Info: Redefining \pageref on input line 10.
 LaTeX Info: Redefining \nameref on input line 10.
+
+(build/main.out) (build/main.out)
 \@outlinefile=\write4
 \openout4 = `main.out'.
 
@@ -895,7 +926,7 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 15.
 
 (/opt/texlive/texdir/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
+) (build/main.toc)
 \tf@toc=\write5
 \openout5 = `main.toc'.
 
@@ -912,28 +943,21 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 7.
 )
 (./2_System_Perspective.tex [2]
-<images/ComponentDiagram.png, id=29, 1615.53563pt x 1145.27875pt>
+<images/ComponentDiagram.png, id=64, 1615.53563pt x 1145.27875pt>
 File: images/ComponentDiagram.png Graphic file (type png)
 <use images/ComponentDiagram.png>
 Package pdftex.def Info: images/ComponentDiagram.png  used on input line 27.
 (pdftex.def)             Requested size: 398.33643pt x 282.387pt.
  [3 <./images/ComponentDiagram.png>]
-
-LaTeX Warning: Reference `DeploymentDiagram_1' on page 4 undefined on input lin
-e 43.
-
-<images/DevOpsDeploymentDiagram.png, id=46, 1413.28pt x 1602.98875pt>
+<images/DevOpsDeploymentDiagram.png, id=81, 1413.28pt x 1602.98875pt>
 File: images/DevOpsDeploymentDiagram.png Graphic file (type png)
 <use images/DevOpsDeploymentDiagram.png>
 Package pdftex.def Info: images/DevOpsDeploymentDiagram.png  used on input line
  47.
 (pdftex.def)             Requested size: 301.02428pt x 341.43166pt.
-[4] [5 <./images/DevOpsDeploymentDiagram.png>]
-
-LaTeX Warning: Reference `ServerAssembly' on page 6 undefined on input line 86.
-
-
-<images/test coverage.jpg, id=70, 424.58624pt x 107.2005pt>
+ [4]
+[5 <./images/DevOpsDeploymentDiagram.png>]
+<images/test coverage.jpg, id=104, 424.58624pt x 107.2005pt>
 File: images/test coverage.jpg Graphic file (type jpg)
 <use images/test coverage.jpg>
 Package pdftex.def Info: images/test coverage.jpg  used on input line 92.
@@ -944,7 +968,7 @@ Overfull \hbox (37.01443pt too wide) in paragraph at lines 92--93
  []
 
 [6 <./images/test coverage.jpg>]
-<images/snyk.jpg, id=80, 859.41075pt x 215.00325pt>
+<images/snyk.jpg, id=115, 859.41075pt x 215.00325pt>
 File: images/snyk.jpg Graphic file (type jpg)
 <use images/snyk.jpg>
 Package pdftex.def Info: images/snyk.jpg  used on input line 103.
@@ -954,7 +978,7 @@ Overfull \hbox (36.9827pt too wide) in paragraph at lines 103--104
  [][] 
  []
 
-<images/sonarcloud.jpg, id=81, 729.927pt x 289.08pt>
+<images/sonarcloud.jpg, id=116, 729.927pt x 289.08pt>
 File: images/sonarcloud.jpg Graphic file (type jpg)
 <use images/sonarcloud.jpg>
 Package pdftex.def Info: images/sonarcloud.jpg  used on input line 114.
@@ -965,7 +989,7 @@ Overfull \hbox (36.99173pt too wide) in paragraph at lines 114--115
  []
 
 [7 <./images/snyk.jpg> <./images/sonarcloud.jpg>]
-<images/lighthouse.jpg, id=91, 591.4095pt x 554.67226pt>
+<images/lighthouse.jpg, id=126, 591.4095pt x 554.67226pt>
 File: images/lighthouse.jpg Graphic file (type jpg)
 <use images/lighthouse.jpg>
 Package pdftex.def Info: images/lighthouse.jpg  used on input line 124.
@@ -976,11 +1000,7 @@ Overfull \hbox (6.47794pt too wide) in paragraph at lines 124--125
  []
 
 [8 <./images/lighthouse.jpg>]
-
-LaTeX Warning: Reference `fig:scancodelicenses' on page 9 undefined on input li
-ne 135.
-
-<images/Scancode-licenses2.png, id=102, 1099.10625pt x 630.355pt>
+<images/Scancode-licenses2.png, id=138, 1099.10625pt x 630.355pt>
 File: images/Scancode-licenses2.png Graphic file (type png)
 <use images/Scancode-licenses2.png>
 Package pdftex.def Info: images/Scancode-licenses2.png  used on input line 139.
@@ -996,17 +1016,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 33--34
 
  []
 
-[9 <./images/scancode-licenses2.png (PNG copy)>]
+
 Underfull \hbox (badness 10000) in paragraph at lines 38--39
 
  []
 
-[10] [11]
-
-LaTeX Warning: Reference `GrafanaDashboard' on page 12 undefined on input line 
-109.
-
-<images/dashboard.png, id=138, 1876.00874pt x 921.4425pt>
+[9 <./images/scancode-licenses2.png (PNG copy)>] [10] [11]
+<images/dashboard.png, id=175, 1876.00874pt x 921.4425pt>
 File: images/dashboard.png Graphic file (type png)
 <use images/dashboard.png>
 Package pdftex.def Info: images/dashboard.png  used on input line 113.
@@ -1044,7 +1060,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 3--1
  []
 
 [16]) (./7_Appendix.tex
-<images/test coverage server.jpg, id=211, 419.76825pt x 618.51076pt>
+<images/test coverage server.jpg, id=244, 419.76825pt x 618.51076pt>
 File: images/test coverage server.jpg Graphic file (type jpg)
 <use images/test coverage server.jpg>
 Package pdftex.def Info: images/test coverage server.jpg  used on input line 15
@@ -1067,47 +1083,37 @@ Underfull \hbox (badness 10000) in paragraph at lines 70--73
 
 [19] [20] [21]) [22] (build/main.aux)
 
-LaTeX Warning: There were undefined references.
+LaTeX Warning: There were multiply-defined labels.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  91EB5E25FE6B54CBB2A13DED1268096C;745.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: 91EB5E25FE6B54CBB2A13DED1268096C;745.
  ) 
 Here is how much of TeX's memory you used:
- 23809 strings out of 478305
- 434148 string characters out of 5847251
+ 23823 strings out of 478305
+ 434320 string characters out of 5847251
  887711 words of memory out of 5000000
- 41439 multiletter control sequences out of 15000+600000
- 478616 words of font info for 65 fonts, out of 8000000 for 9000
+ 41446 multiletter control sequences out of 15000+600000
+ 478307 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 89i,12n,83p,1412b,650s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,11n,83p,1412b,650s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/opt/texlive/texdir/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</o
 pt/texlive/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></opt/te
 xlive/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></opt/texlive
-/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></opt/texlive/texdi
-r/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></opt/texlive/texdir/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></opt/texlive/texdir/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmr12.pfb></opt/texlive/texdir/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmr17.pfb></opt/texlive/texdir/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmr6.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmr7.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmr8.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmsy10.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmti
-10.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pf
-b></opt/texlive/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></op
-t/texlive/texdir/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on build/main.pdf (22 pages, 1142484 bytes).
+/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></opt/texlive/tex
+dir/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></opt/texlive/texdir/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></opt/texlive/texdir/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr17.pfb></opt/texlive/texdir/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmr6.pfb></opt/texlive/texdir/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr7.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr8.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmsy10.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmti10.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
+t10.pfb></opt/texlive/texdir/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pf
+b></opt/texlive/texdir/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on build/main.pdf (22 pages, 1136225 bytes).
 PDF statistics:
- 332 PDF objects out of 1000 (max. 8388607)
- 263 compressed objects within 3 object streams
+ 360 PDF objects out of 1000 (max. 8388607)
+ 293 compressed objects within 3 object streams
  96 named destinations out of 1000 (max. 500000)
- 58 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 114 words of extra memory for PDF output out of 10000 (max. 10000000)
 
