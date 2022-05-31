@@ -1,0 +1,36 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}System Perspective}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}System Design}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}System Architecture}{4}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Subsystems}{5}{subsubsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.3}System Dependencies}{6}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Current State}{6}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Test Coverage Percentage}{6}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Snyk Report}{7}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}SonarCloud Report}{7}{subsubsection.2.4.3}%
+\contentsline {subsubsection}{\numberline {2.4.4}Lighthouse Report}{8}{subsubsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.5}License compatibility}{9}{subsection.2.5}%
+\contentsline {section}{\numberline {3}The Developing Process}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Developer interaction}{9}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Team Organisation}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}CI/CD Description}{10}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}deployy.yml}{10}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}dotnet.yml}{11}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}release.yml}{11}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}snykimagescan.yml}{11}{subsubsection.3.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.5}sonarcube.yml}{11}{subsubsection.3.3.5}%
+\contentsline {subsubsection}{\numberline {3.3.6}yamllint.yml}{11}{subsubsection.3.3.6}%
+\contentsline {subsection}{\numberline {3.4}Repository Organisation}{12}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Branching Strategy}{12}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Monitoring}{12}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Logging}{13}{subsection.3.7}%
+\contentsline {subsection}{\numberline {3.8}Security}{13}{subsection.3.8}%
+\contentsline {subsection}{\numberline {3.9}Scaling and load balancing}{14}{subsection.3.9}%
+\contentsline {section}{\numberline {4}Lessons}{14}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Evolution and refactoring}{14}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Maintenance}{14}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Operation}{15}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Our DevOps Style}{15}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Conclusion}{16}{section.5}%
+\contentsline {section}{\numberline {6}References}{16}{section.6}%
+\contentsline {section}{\numberline {7}Appendix}{17}{section.7}%
