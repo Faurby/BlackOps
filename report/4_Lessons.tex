@@ -1,0 +1,68 @@
+\section{Lessons}
+\label{sec:mpt}
+
+% Lessons Learned Perspective
+
+% Describe the biggest issues, how you solved them, and which are major lessons learned with regards to:
+
+%     evolution and refactoring
+%     operation, and
+%     maintenance
+
+% of your ITU-MiniTwit systems. Link back to respective commit messages, issues, tickets, etc. to illustrate these.
+
+% Also reflect and describe what was the "DevOps" style of your work. For example, what did you do differently to previous development projects and how did it work?
+
+\subsection{Evolution and refactoring}
+The difficulty of handling systems tends to increase exponentially as the size of the system grows. This is why we learned about the automation of different tasks, to lower the workload of tedious but simple tasks. 
+
+This was done through different workflows, with one of the first being the \textit{deployy.ylm} \footnote{\url{https://github.com/Faurby/BlackOps/pull/63}} that automatised the deployment of new code integration, when merging a pull request into the main branch. The workflow uses \textit{docker compose} to start new containers only when a change has been made to the container images.
+
+%An important lesson learned is the importance of shared ownership of the code.
+%An uneven distribution of work, goes against the idea of a DevOps team.
+
+%The refactoring from Python 2 -> C#
+
+%Issues with the conversion and reflections
+
+%EVOLUTION: 
+%Automation
+%How did we change our product when finding new issues
+%Continuous reflections lead to the evolution of our system
+
+\subsection{Maintenance}
+Maintaining cloud services is not a simple task. Unlike running a service locally, maintaining a live server requires not only the error handling and correctness of features, but also the preservation of the service's health. \\
+When implementing \textit{Kibana} to log important details regarding the health of our system, we unfortunately had some issues. It took us two weeks, two database crashes and a lot of needless panic to implement our logging system as seen from pull request \textit{\url{https://github.com/Faurby/BlackOps/pull/140}} to pull request \textit{\url{https://github.com/Faurby/BlackOps/pull/150}}. When implementing \textit{Kibana}, it worked just fine locally, but as soon as we deployed it to the webserver, \textit{Kibana} used up almost all of our available resources. We then decided to revert to the prior deployment, however due to our mismanagement of Docker volumes, our database crashed when reverting. \\
+We ended up improving the way we used docker volumes, and considered making a workflow that would backup our database once a day using a cron job. This would mean that if the database were to crash again, we would have a newer backup, leading to a smaller data loss.We did not get around to implementing the workflow, but discussed the practice of it in great detail.
+%What did we do to keep up the maintenance of our system? 
+
+%How did we deal with our big fuck ups? WHat could we have done to better handle the situation that broke our database?
+
+
+\subsection{Operation}
+When the database crashed\footnote{Appendix 3.6}, our latest backup was unfortunately around a week old. The old backup was missing some of the users that were created over the week prior to the crash, which led to our group getting a lot of \textbf{tweet}, \textbf{follow} and \textbf{unfollow} errors, as these were all user specific. However, since our database crashed close to the end of a simulator phase, we did not miss out on that many requests.
+\\
+This was unfortunately not the case for the second crash\footnote{Appendix 3.7}, as this happened just after the simulator started its next iteration, leading to us losing almost all of the users resulting in a lot of panic and more simulator errors. This taught us the importance of keeping a new backup at hand, as well as the difficulty of maintaining live services once again.
+
+
+%Problems and reflections regarding the operation of our droplets. What went wrong, and what could we have done to improve 
+
+
+
+\subsection{Our DevOps Style}
+We started this project with no prior experience working with cloud services. This meant that we had to change our way of thinking, planning and developing, as we no longer simply had to introduce something to a local environment.
+\\\\
+When encountering the concept of the three ways mentioned in \textit{The Phoenix Project}, we started acknowledging the importance of a continuous cycle. Through continuous build, integration, test and deployment processes, we achieved the foundation of the first way. This allowed us to reduce complications such as the lead time to integrate the features we were asked to implement over the course. Having a good understanding of the service we had created along with a well grounded sense of organisation, we also achieved the second way, by reflecting on problems that arose over time. This was where we recognised faults in our prior work together with discussing possible solutions for the future. We did however lack a sense of external feedback, as all of us in the group would have some bias towards the work that we had created. Working with a weekly major release scheme, we also achieved the beginnings of the third way, as we were confident on taking risks, knowing that nothing major would change from one day to another. As this course has been a learning experience, with no real drawbacks of failure, everyone in the group also felt confident to explore territory that seemed daunting and difficult at first glance. Integrating these practices allowed us to start noticing ways of increasing the efficiency of maintaining the health of our service. 
+\\\\
+This past semester has shown us the difference and difficulty of developing and integrating software meant for live users. There is a noticeable difference in the amount of variables one has to take into account when developing software for a live service, as well as acute consequences should something go wrong. DevOps has given us a perspective into the software world that most new programmers are only familiar with on a concept basis, along with an initial understanding and rewarding nature of automating certain practices. 
+
+
+
+%incorporate the three ways of devops ^
+
+
+%How did developing using DevOps practices change our normal way of developing? 
+
+%Thoughts regarding this way of developing software
+
+%Short reflections regarding this project

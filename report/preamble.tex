@@ -1,0 +1,92 @@
+%Nakket fra ISE project
+\usepackage[a4paper]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{
+    amsmath, % \begin{align}
+    amssymb, % math symbols såsom \rightarrow 
+    graphicx, % indsæt billeder
+    wrapfig, % indsæt figurer ved siden af tekst
+    float, % vælge placering af figures med [H]
+    enumitem, % ændre label på enumeration
+    fancyhdr, % header og footer
+    xcolor, % tekstfarve mm.
+    colortbl, % farve tabellers celler
+    tabularx, % mere kontrol over tabeller
+    listings, % kodebokse
+    hyperref, % embed links
+    nameref, % referere til mere end bare label-number
+} 
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage[final]{pdfpages}
+\usepackage{multirow}
+
+% Sideopsætning
+\pagestyle{fancy} % Bred side med header og footer
+\fancyhead[LR]{} % Headeren er nu tom
+\renewcommand{\headrulewidth}{0pt} % Ingen streg under headeren
+\renewcommand{\footrulewidth}{0pt} % Ingen streg under footeren
+\setcounter{tocdepth}{1} % Hvor meget skal med i tocs
+
+% Tekstformattering
+\setlength{\parindent}{0pt} % Ingen indryk
+\linespread{1.2} % Linjeafstand
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex} % Et lille linjeskip i stedet for indryk
+
+\newcommand{\dashline}{- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -}
+%\newcommand{\dashline}{-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;-- \;\;--}
+
+
+\hypersetup{
+    colorlinks,
+    linkcolor={black},
+    citecolor={black},
+    urlcolor={blue!80!black}
+}
+
+
+% Tabeller, afhængig af tabularx package
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+\newcolumntype{B}{>{\columncolor{mygray}\raggedright}X}
+\newcolumntype{L}{>{\raggedright}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+
+% Matematik
+\renewcommand{\mod}{\textbf{ mod }}
+\newcommand{\mmod}{\text{mod }}
+\renewcommand{\lg}{\text{lg}}
+\renewcommand{\div}{\text{ div }}
+
+
+% Farver
+\definecolor{darkgreen}{HTML}{009900}
+\definecolor{dkgreen}{HTML}{21892F}
+\definecolor{myblue}{HTML}{3237C0}
+\definecolor{mygrey}{rgb}{0.5,0.5,0.5}
+
+% farvet tekst, afhængig af colorx package
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\grey}[1]{\textcolor{lightgray}{#1}}
+\newcommand{\green}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\greenHL}[1]{\sethlcolor{green}\hl{#1}}
+\newcommand{\yellowHL}[1]{\sethlcolor{yellow}\hl{#1}}
+\newcommand{\redHL}[1]{\sethlcolor{red}\hl{#1}}
+
+
+% Til kodebokse, afhængig af listings package
+\lstset{frame=single,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=left, 
+  numberstyle=\tiny\color{mygrey},
+  keywordstyle=\color{myblue},
+  commentstyle=\color{dkgreen},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
