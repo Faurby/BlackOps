@@ -1,5 +1,6 @@
+# https://texdoc.org/serve/latexmk.pdf/0
 # using: https://github.com/xu-cheng/latex-action
-#
+# using: https://github.com/actions-js/push 
 name: Compile Latex and Release PDF  
 
 on:  # yamllint disable-line rule:truthy
@@ -16,7 +17,7 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-         run: |
+          run: |
             cd ./report
             pdflatex -output-directory build main.tex 
 
