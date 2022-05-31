@@ -14,8 +14,8 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
+          working_directory: report
           root_file: main.tex
-          working_directoy: report
 
       - name: Create Release
         id: create_release
