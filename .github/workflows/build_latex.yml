@@ -18,7 +18,7 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will fail to push 
       - name: Compile LaTeX document
-        uses: xu-cheng/latex-action@v2
+        uses: xu-cheng/texlive-action/full@v1
         with:
           run: |
             cd ./report
@@ -29,7 +29,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: 'main'
-          message: 'publish report.pdf'
+          message: 'Report has been created!'
           force: 'true' #Ignores push constraints on main branch
           directory: ./report
           author_email: cafm@itu.dk
